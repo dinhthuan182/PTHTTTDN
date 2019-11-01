@@ -1,0 +1,79 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package edu.tdt.entity;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.ejb.Remote;
+
+/**
+ *
+ * @author thuan
+ */
+@Remote
+public interface MobileStoreSystemBeanRemote {
+      
+    User Login(String username,String password);//Done!
+    
+    
+    //Store Management
+    Store insertStore(String name, String address, String phone, String email);//Done!
+    boolean updateStore(Long id, String name, String address, String phone, String email, Boolean status);//Done!
+    boolean deleteStore(Long id);//Done!
+    List<Store> getAllStores();//Done!
+    Store findStoreById(Long id);//Done!
+    
+    //User Management
+    User insertUser(String userName, String userPassword, String fullName, String address, String phone, Long storeId, String email); //Done!
+    boolean updateUser(Long id, String userPassword, String fullName, String address, String phone, Long storeId, String email, Boolean status);
+    boolean deleteUser(Long id);
+    void insertRole(String roleName);
+    void insertUserRole(Long user_id, String roleName);
+    ArrayList<String> searchRole(String rolename);
+    List<User> getAllUsers();//Done!
+    User findUserById(Long id);
+    List<Role> getAllRoles();
+    List<User> getUsersByRole(String roleName);
+    List<Role> getRolesByUser(Long userId);
+    boolean deleteUserRole(Long user_id, String roleName);
+    
+    //Product Management
+    Product insertProduct(String name, Long supplierId, Integer afterCamera, Integer beforeCamera, String color ,String description, Integer memory ,String operator ,Integer price ,Integer warranty ,String screen,String pin);
+    boolean updateProduct(Long id, String name, Long supplierID, Integer afterCamera, Integer beforeCamera, String color ,String description, Integer memory ,String operator ,Integer price ,Integer warranty ,String screen,String pin, Boolean status);
+    boolean deleteProduct(Long id);
+    List<Product> getAllProducts();
+    Product findProductById(Long id);
+    
+    //Supplier Management
+    Supplier insertSupplier(String name, String address, String phone, String email);
+    boolean updateSupplier(Long id, String fullname, String address, String phone, String email ,Boolean status);
+    boolean deleteSupplier(Long id);
+    List<Supplier> getAllSuppliers();
+    Supplier findSupplierById(Long id);
+    
+    //Customer Management
+    Customer insertCustomer(String fullname, String address, String phone, String email);
+    boolean updateCustomer(Long id, String fullname, String address, String phone, String email);
+    boolean deleteCustomer(Long id);
+    List<Customer> getAllCustomers();
+    Customer findCustomerById(Long id);
+    
+    //Order Management
+    Order1 insertOrder(String customerName, String customerAddress, String customerPhone, String customerEmail, Store store, User staff, List<OrderDetail> productList, String note );
+    boolean updateOrder(Long id, BigInteger total , Character note );
+    boolean deleteOrder(Long id);
+    List<Order1> getAllOrders();
+    Order1 findOrderById(Long id);
+    
+    //IO Warehouse Management
+    IoWarehouse insertIoWarehouse(BigInteger price, BigInteger total , Boolean import1 );
+    boolean updateIoWarehouse(Long id, BigInteger price, BigInteger total , Boolean import1);
+    boolean deleteIoWarehouse(Long id);
+    List<IoWarehouse> getAllIoWarehouses();
+    IoWarehouse findIoWarehouselById(Long id);
+}
