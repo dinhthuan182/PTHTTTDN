@@ -513,14 +513,15 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
     @Override
     public Order1 insertOrder(String customerName, String customerAddress, String customerPhone, String customerEmail, Store store, User staff, List<OrderDetail> productList, String note) {
         int total = 0;
-        Customer customer = null;
-         customer = (Customer) em.createNamedQuery("Customer.findByPhone").setParameter("phone", customerPhone).getSingleResult();
+        Customer customer = findCustomerByPhone(customerPhone);
         if(customer == null) {
             customer = this.insertCustomer(customerName, customerAddress, customerPhone, customerEmail);
         }
+        //total = price * quantity
         for(OrderDetail detail :productList ) {
             total +=  detail.getQuantity()*detail.getPrice();
         }
+        //Create order
         Order1 order = new Order1();
         order.setCustomerId(customer);
         order.setStoreId(store);
@@ -530,6 +531,9 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
         order.setNote(note);
         em.persist(order);
         
+        for(OrderDetail detail :productList ) {
+            this.insertOrderDetail(order, detail.getProduct(), detail.getPrice(), detail.getQuantity());
+        }
         
         return order;
     }
@@ -608,4 +612,22 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
         return (IoWarehouse) em.createNamedQuery("IoWarehouse.findById").setParameter("id", id).getSingleResult();
     }
 
+    public void insertOrderDetail(Order1 order, Product product, int price, int quantity) {
+        OrderDetail oDetail = new OrderDetail();
+        oDetail.setOrder1(order);
+        oDetail.setProduct(product);
+        oDetail.setOrderDetailPK(new OrderDetailPK(order.getId(), product.getId()));
+        oDetail.setPrice(price);
+        oDetail.setQuantity(quantity);
+        em.persist(oDetail);
+    }
+
+    @Override
+    public Customer findCustomerByPhone(String phone) {
+        try {
+            return (Customer) em.createNamedQuery("Customer.findByPhone").setParameter("phone", phone).getSingleResult();
+        }catch (Exception e) {
+            return null;
+        }
+    }
 }

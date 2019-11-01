@@ -980,9 +980,8 @@ public class TestSystem {
                         Long order_id, order_customer_id, order_staff_id, order_store_id, order_product_id;
                         BigInteger order_total;
                         String order_customer_fullname, order_customer_address, order_customer_phone, order_customer_email, order_note;
-                        boolean order_stop = false;
                         int orderChoice, order_next, order_quantity;
-                        List<OrderDetail> productlist = null;
+                        List<OrderDetail> productlist = new ArrayList();
                         do{
                             showOrderMenuGUI();
                             orderChoice = Integer.parseInt(sc.nextLine());
@@ -1009,11 +1008,8 @@ public class TestSystem {
                                         System.out.print("The store is not exist!");
                                         break;
                                     }
-                                    System.out.print("Enter staff id : ");
-                                    order_staff_id = Long.parseLong(sc.nextLine());
-                                    order_stop = false;
                                     do {
-                                        System.out.print("1. Add product.\n2. Finish.");
+                                        System.out.print("1. Add product.\n2. Finish.\nEnter choise : ");
                                         order_next = Integer.parseInt(sc.nextLine());
                                         if(order_next == 1) {
                                             System.out.print("Enter product id : ");
@@ -1023,7 +1019,7 @@ public class TestSystem {
                                                 System.out.print("The product is not exist!");
                                                 break;
                                             }
-                                            System.out.print("Enter quantity of "+p.getName()+" : ");
+                                            System.out.print("Enter quantity of "+p.getName()+": ");
                                             order_quantity = Integer.parseInt(sc.nextLine());
                                             
                                             OrderDetail order = new OrderDetail();
@@ -1033,10 +1029,9 @@ public class TestSystem {
                                             productlist.add(order);
                                      
                                         } else {
-                                            order_stop = true;
                                             break;
                                         }
-                                    }while(order_stop);
+                                    }while(order_next != 2);
                                     System.out.print("Note : ");
                                     order_note = sc.nextLine();
                                     

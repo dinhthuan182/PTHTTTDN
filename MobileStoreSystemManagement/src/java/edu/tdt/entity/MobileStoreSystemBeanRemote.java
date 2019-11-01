@@ -62,7 +62,7 @@ public interface MobileStoreSystemBeanRemote {
     boolean deleteCustomer(Long id);
     List<Customer> getAllCustomers();
     Customer findCustomerById(Long id);
-    
+    Customer findCustomerByPhone(String phone);
     //Order Management
     Order1 insertOrder(String customerName, String customerAddress, String customerPhone, String customerEmail, Store store, User staff, List<OrderDetail> productList, String note );
     boolean updateOrder(Long id, BigInteger total , Character note );
