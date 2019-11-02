@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
@@ -439,7 +438,6 @@ public class TestSystem {
 
             // Lookup the SystemManagementRemote
             MobileStoreSystemBeanRemote session = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
-
             // Log-in
             String _username, _password;
             System.out.println("Log-in to TDT System Management");
@@ -456,8 +454,8 @@ public class TestSystem {
             
             //Collection<Role> userRole = current_user.getRoleCollection();
             System.out.println("==================================");
-            System.out.println("current user : " +current_user.getUserName());
-            //System.out.println("List role: " + userRole);
+            System.out.println("current user : " + current_user.getUserName() +" - "+ current_user.getRoleCollection());
+            
             System.out.println("----------------------------------");
 
             
@@ -981,6 +979,8 @@ public class TestSystem {
                         BigInteger order_total;
                         String order_customer_fullname, order_customer_address, order_customer_phone, order_customer_email, order_note;
                         int orderChoice, order_next, order_quantity;
+                        Store store_finded;
+                        Order1 order_finded;
                         List<OrderDetail> productlist = new ArrayList();
                         do{
                             showOrderMenuGUI();
@@ -1003,13 +1003,13 @@ public class TestSystem {
                                     order_customer_email = sc.nextLine();
                                     System.out.print("Enter store id : ");
                                     order_store_id  = Long.parseLong(sc.nextLine());
-                                    Store store_finded = session.findStoreById(order_store_id);
+                                    store_finded = session.findStoreById(order_store_id);
                                     if(store_finded == null) {
                                         System.out.print("The store is not exist!");
                                         break;
                                     }
                                     do {
-                                        System.out.print("1. Add product.\n2. Finish.\nEnter choise : ");
+                                        System.out.print("1. Add product.\n2. Delete product.\n3. Finish.\nEnter choise : ");
                                         order_next = Integer.parseInt(sc.nextLine());
                                         if(order_next == 1) {
                                             System.out.print("Enter product id : ");
@@ -1028,10 +1028,18 @@ public class TestSystem {
                                             order.setPrice(p.getPrice());
                                             productlist.add(order);
                                      
+                                        } else if(order_next == 2) {
+                                            System.out.print("Enter product id : ");
+                                            order_product_id = Long.parseLong(sc.nextLine());
+                                            productlist.remove(new Product(order_product_id));
+                                            
                                         } else {
                                             break;
                                         }
-                                    }while(order_next != 2);
+                                    }while(order_next != 3);
+                                    for(int i =0; i<productlist.size(); i++) {
+                                        System.out.println(i +". "+ productlist.get(i).getProduct().getName() +" "+ productlist.get(i).getPrice() +" "+ productlist.get(i).getQuantity());
+                                    }
                                     System.out.print("Note : ");
                                     order_note = sc.nextLine();
                                     
@@ -1045,12 +1053,77 @@ public class TestSystem {
                                     break;
                                     
                                 case 3: //Edit Order
-                                    
+                                    System.out.print("Enter order id : ");
+                                    order_id = Long.parseLong(sc.nextLine());
+                                    order_finded = session.findOrderById(order_id);
+                                    if(order_finded == null) {
+                                        System.out.println("The id is not exist!");
+                                        break;
+                                    }else {
+                                        productlist.addAll(order_finded.getOrderDetailCollection());
+                                    }
+                                    System.out.print("Enter customer name : ");
+                                    order_customer_fullname = sc.nextLine();
+                                    System.out.print("Enter customer address :");
+                                    order_customer_address = sc.nextLine();
+                                    System.out.print("Enter customer phone : ");
+                                    order_customer_phone = sc.nextLine();
+                                    System.out.print("Enter customer email : ");                                   
+                                    order_customer_email = sc.nextLine();
+                                    System.out.print("Enter store id : ");
+                                    order_store_id  = Long.parseLong(sc.nextLine());
+                                    store_finded = session.findStoreById(order_store_id);
+                                    if(store_finded == null) {
+                                        System.out.print("The store is not exist!");
+                                        break;
+                                    }
+                                    do {
+                                        System.out.print("1. Add product.\n2. Delete product.\n3. Finish.\nEnter choise : ");
+                                        order_next = Integer.parseInt(sc.nextLine());
+                                        if(order_next == 1) {
+                                            System.out.print("Enter product id : ");
+                                            order_product_id = Long.parseLong(sc.nextLine());
+                                            Product p = session.findProductById(order_product_id);
+                                            if(p == null) {
+                                                System.out.print("The product is not exist!");
+                                                break;
+                                            }
+                                            System.out.print("Enter quantity of "+p.getName()+": ");
+                                            order_quantity = Integer.parseInt(sc.nextLine());
+                                            
+                                            OrderDetail order = new OrderDetail();
+                                            order.setProduct(p);
+                                            order.setQuantity(order_quantity);
+                                            order.setPrice(p.getPrice());
+                                            productlist.add(order);
+                                     
+                                        } else if(order_next == 2) {
+                                            System.out.print("Enter product id : ");
+                                            order_product_id = Long.parseLong(sc.nextLine());
+                                            productlist.remove(new Product(order_product_id));
+                                            
+                                        } else {
+                                            break;
+                                        }
+                                    }while(order_next != 3);
+                                    for(int i =0; i<productlist.size(); i++) {
+                                        System.out.println(i +". "+ productlist.get(i).getProduct().getName() +" "+ productlist.get(i).getPrice() +" "+ productlist.get(i).getQuantity());
+                                    }
+                                    System.out.print("Note : ");
+                                    order_note = sc.nextLine();
                                     System.out.println("----------------------------------");
                                     break;
                                     
                                 case 4: //Remove Order
-                                    
+                                    System.out.print("Enter order id : ");
+                                    order_id = Long.parseLong(sc.nextLine());
+                                    if(session.deleteOrder(order_id))
+                                    {
+                                        System.out.println("Delete Successful!");
+                                    }else
+                                    {
+                                        System.out.println("Delete Faild!");
+                                    }
                                     System.out.println("----------------------------------");
                                     break;
                                     

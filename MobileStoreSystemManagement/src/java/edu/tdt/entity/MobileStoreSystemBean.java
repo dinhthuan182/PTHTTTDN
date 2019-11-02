@@ -560,6 +560,8 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
     public boolean deleteOrder(Long id) {
         try
         {
+            Order1 order = (Order1) em.createNamedQuery("Order1.findById").setParameter("id", id).getSingleResult();
+            deleteOrderDetail(order);
             Query deleteQuery = em.createQuery("DELETE FROM Order1 o WHERE o.id = :id");
             deleteQuery.setParameter("id", id).executeUpdate();
             return true;
@@ -567,6 +569,11 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
         {
             return false;
         }  
+    }
+    
+    public void deleteOrderDetail(Order1 order) {
+        Query deleteDetailQuery = em.createQuery("DELETE FROM OrderDetail od WHERE od.order1 = :order");
+        deleteDetailQuery.setParameter("order", order).executeUpdate();
     }
 
     @Override
