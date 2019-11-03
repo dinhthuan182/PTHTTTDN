@@ -10,6 +10,7 @@ import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -64,7 +65,7 @@ public class Customer implements Serializable {
     @Size(max = 100)
     @Column(name = "email", length = 100)
     private String email;
-    @OneToMany(mappedBy = "customerId")
+    @OneToMany(mappedBy = "customerId", fetch=FetchType.EAGER)
     private Collection<Order1> order1Collection;
 
     public Customer() {

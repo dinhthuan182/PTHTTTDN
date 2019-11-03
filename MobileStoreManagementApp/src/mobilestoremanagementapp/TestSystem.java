@@ -77,7 +77,7 @@ public class TestSystem {
     private void showMainMenuGUI()
     {
         System.out.println("\n==================================");
-        System.out.println("TDT System Management");
+        System.out.println("Mobile System Store Management");
         System.out.println("----------------------------------");
         System.out.print("Options: \n1. Store Management \n2. User Management \n3. Product Management \n4. Supplier Management \n5. Customer Management \n6. Order Management \n7. IO Warehouse Management \n8. Exit \nEnter Choice: ");
     }
@@ -85,7 +85,7 @@ public class TestSystem {
     private void showStoreMenuGUI()
     {
         System.out.println("\n==================================");
-        System.out.println("TDT Store Management");
+        System.out.println("Mobile Store Management");
         System.out.println("----------------------------------");
         System.out.print("Options: \n1. List Store \n2. Add Store \n3. Edit Store \n4. Remove Store \n5. Exit \nEnter Choice: ");
     }
@@ -93,7 +93,7 @@ public class TestSystem {
     private void showUserMenuGUI()
     {
         System.out.println("\n==================================");
-        System.out.println("TDT User Management");
+        System.out.println("Mobile User Management");
         System.out.println("----------------------------------");
         System.out.print("Options: \n1. List User \n2. Add User \n3. Edit User \n4. Remove User \n5. List Role \n6. Add Role \n7. Remove Role \n8. Add User Role \n9. List User of Role \n10. List Role of User \n11. Delete User Role \n12. Exit \nEnter Choice: ");
     }
@@ -101,7 +101,7 @@ public class TestSystem {
     private void showProductMenuGUI()
     {
         System.out.println("\n==================================");
-        System.out.println("TDT Product Management");
+        System.out.println("Mobile Product Management");
         System.out.println("----------------------------------");
         System.out.print("Options: \n1. List Product \n2. Add Product \n3. Edit Product \n4. Remove Product \n5. Exit \nEnter Choice: ");
     }
@@ -109,7 +109,7 @@ public class TestSystem {
     private void showSupplierMenuGUI()
     {
         System.out.println("\n==================================");
-        System.out.println("TDT Supplier Management");
+        System.out.println("Mobile Supplier Management");
         System.out.println("----------------------------------");
         System.out.print("Options: \n1. List Supplier \n2. Add Supplier \n3. Edit Supplier \n4. Remove Supplier \n5. Exit \nEnter Choice: ");
     }
@@ -117,7 +117,7 @@ public class TestSystem {
     private void showCustomerMenuGUI()
     {
         System.out.println("\n==================================");
-        System.out.println("TDT Customer Management");
+        System.out.println("Mobile Customer Management");
         System.out.println("----------------------------------");
         System.out.print("Options: \n1. List Customer \n2. Add Customer \n3. Edit Customer \n4. Remove Customer \n5. Exit \nEnter Choice: ");
     }
@@ -125,7 +125,7 @@ public class TestSystem {
     private void showOrderMenuGUI()
     {
         System.out.println("\n==================================");
-        System.out.println("TDT Order Management");
+        System.out.println("Mobile Order Management");
         System.out.println("----------------------------------");
         System.out.print("Options: \n1. List Order \n2. Add Order \n3. Edit Order \n4. Remove Order \n5. Exit \nEnter Choice: ");
     }
@@ -133,7 +133,7 @@ public class TestSystem {
     private void showIOWarehouseMenuGUI()
     {
         System.out.println("\n==================================");
-        System.out.println("TDT IO Warehouse Management");
+        System.out.println("Mobile IO Warehouse Management");
         System.out.println("----------------------------------");
         System.out.print("Options: \n1. List IO Warehouse \n2. Add IO Warehouse \n3. Edit IO Warehouse \n4. Remove IO Warehouse \n5. Exit \nEnter Choice: ");
     }
@@ -146,18 +146,19 @@ public class TestSystem {
         MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
         List<Store> storesList = libBean2.getAllStores();
 
-        // Print all books
+        // Print all stores
         if(storesList.isEmpty())
         {
-            System.out.println("There is no store in the system!\n");
+            System.err.println("There are no stores in the system.\n");
             return;
         }
 
         System.out.println("==================================");
         System.out.println("------------List Store------------");
+        System.out.println("Store id\tStore name\t\t\tStore phone\tStore address\tEmployee");
         for (int i = 0; i < storesList.size(); i++)
         {
-            System.out.println(storesList.get(i).getId()+"\t"+ storesList.get(i).getName());
+            System.out.println(storesList.get(i).toString()+"\t"+ storesList.get(i).getUserCollection().size());
         }
         System.out.println();
 
@@ -178,15 +179,16 @@ public class TestSystem {
         // Print all books
         if(usersList.isEmpty())
         {
-            System.out.println("There is no user in the system!\n");
+            System.err.println("There are no users in the system!\n");
             return;
         }
 
         System.out.println("==================================");
         System.out.println("------------List User-------------");
+        System.out.println("User id\tUsername\tFull name\tUser address\tUser numberphone\tUser email\tStore");
         for (int i = 0; i < usersList.size(); i++)
         {
-            System.out.println(usersList.get(i).getId()+"\t"+ usersList.get(i).getUserName()+"\t"+usersList.get(i).getPassword());
+            System.out.println(usersList.get(i).toString()+"\t"+ usersList.get(i).getStoreId().getName());
         }
         System.out.println();
 
@@ -207,15 +209,16 @@ public class TestSystem {
         // Print all books
         if(rolesList.isEmpty())
         {
-            System.out.println("There is no role in the system!\n");
+            System.err.println("There are no roles in the system!\n");
             return;
         }
 
         System.out.println("==================================");
         System.out.println("------------List Role-------------");
+        System.out.println("STT\tRole name\tEmployee");
         for (int i = 0; i < rolesList.size(); i++)
         {
-            System.out.println(i+"\t"+rolesList.get(i).getRoleName());
+            System.out.println(i+"\t"+rolesList.get(i).getRoleName()+"\t"+ rolesList.get(i).getUserCollection().size());
         }
         System.out.println();
 
@@ -239,10 +242,11 @@ public class TestSystem {
             }
 
             System.out.println("==================================");
-            System.out.println("------------List "+ role +" Role-----------");
+            System.out.println("----------List "+ role +" Role---------");
+            System.out.println("User id\tUsername\tFull name\tUser address\tUser numberphone\tUser email\tStore");
             for (int i = 0; i < usersList.size(); i++)
             {
-                System.out.println(usersList.get(i).getId() +"\t"+ usersList.get(i).getUserName());
+                System.out.println(usersList.get(i).toString());
             }
             System.out.println("----------------------------------");
 
@@ -257,22 +261,21 @@ public class TestSystem {
         {
             // We can define another bean to access the LibrarySessionBeanRemote
             MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
-            List<Role> rolesList = libBean2.getRolesByUser(id);
-
+            User user = libBean2.findUserById(id);
+            List<Role> rolesList = (List<Role>) user.getRoleCollection();
             // Print all books
-            if(rolesList.isEmpty())
+            if(user == null)
             {
-                System.out.println("There is no role in the system!\n");
+                System.out.println("User is not exist in the system.\n");
                 return;
             }
 
             System.out.println("==================================");
-            System.out.println("------------List Role of "+ id +"-------------");
+            System.out.println("----------List Role of "+ user.getUserName() +"-----------");
             for (int i = 0; i < rolesList.size(); i++)
             {
                 System.out.println((i+1)+"\t"+rolesList.get(i).getRoleName());
             }
-            System.out.println();
             System.out.println("----------------------------------");
 
         } catch (NamingException ex)
@@ -652,6 +655,15 @@ public class TestSystem {
                                     System.out.println("----------------------------------");
                                     break;
                                 case 7: //Remove Role
+                                    System.out.print("Enter role: ");
+                                    user_role = sc.nextLine();
+                                    if(session.deleteRole(user_role.toUpperCase()))
+                                    {
+                                        System.out.println("Delete Successful!");
+                                    }else
+                                    {
+                                        System.out.println("Delete Faild!");
+                                    }
                                     System.out.println("----------------------------------");
                                     break;
                                     

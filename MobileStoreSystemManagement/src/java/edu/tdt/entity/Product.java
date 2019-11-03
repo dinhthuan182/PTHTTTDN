@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -90,9 +91,9 @@ public class Product implements Serializable {
     @JoinColumn(name = "supplier_id", referencedColumnName = "id")
     @ManyToOne
     private Supplier supplierId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", fetch=FetchType.EAGER)
     private Collection<IoDetail> ioDetailCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", fetch=FetchType.EAGER)
     private Collection<OrderDetail> orderDetailCollection;
 
     public Product() {

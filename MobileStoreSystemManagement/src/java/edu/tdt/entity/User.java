@@ -82,12 +82,12 @@ public class User implements Serializable {
     private Boolean status;
     @ManyToMany(mappedBy = "userCollection", fetch=FetchType.EAGER)
     private Collection<Role> roleCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "staffId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "staffId", fetch=FetchType.EAGER)
     private Collection<IoWarehouse> ioWarehouseCollection;
     @JoinColumn(name = "store_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Store storeId;
-    @OneToMany(mappedBy = "staffId")
+    @OneToMany(mappedBy = "staffId", fetch=FetchType.EAGER)
     private Collection<Order1> order1Collection;
 
     public User() {
@@ -224,7 +224,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.tdt.entity.User[ id=" + id + " ]";
+        return "   "+ this.id +"\t"+ this.userName +"\t"+ this.fullName +"\t"+ this.address +"\t"+ this.phone +"\t"+ this.email +"\t";
     }
     
 }

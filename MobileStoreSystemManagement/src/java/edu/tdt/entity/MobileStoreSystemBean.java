@@ -61,23 +61,6 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
     }
 
     @Override
-    public ArrayList<String> searchRole(String rolename) {
-        Role role = em.find(Role.class, rolename);
-
-        if(role != null)
-        {
-            ArrayList<String> arrOutput = new ArrayList<String>();
-            for(User user : role.getUserCollection())
-            {
-                arrOutput.add(user.getUserName());
-            }
-            return arrOutput;
-        }
-        return null;
-    }
-
-
-    @Override
     public User Login(String username, String password) {
         try {
             Query loginQuery = em.createQuery("SELECT u FROM User u WHERE u.userName = :username AND u.password = :password");
@@ -205,35 +188,16 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public List<User> getUsersByRole(String roleName) {
-        //Role role = em.find(Role.class, roleName.toUpperCase());
-        Role role = (Role) em.createNamedQuery("Role.findByRoleName").setParameter("roleName", roleName).getSingleResult();
+        Role role = (Role) em.createNamedQuery("Role.findByRoleName").setParameter("roleName", roleName.toUpperCase()).getSingleResult();
         if(role != null)
         {
             ArrayList<User> arrOutput = new ArrayList<User>();
-            for(User user : role.getUserCollection())
-            {
-                arrOutput.add(user);
-            }
+            arrOutput.addAll(role.getUserCollection());
             return arrOutput;
         }
         return null;
     }
 
-    @Override
-    public List<Role> getRolesByUser(Long userId) {
-        User user = em.find(User.class, userId);
-        
-        if(user != null)
-        {
-            ArrayList<Role> arrResult = new ArrayList<Role>();
-            for(Role role : user.getRoleCollection())
-            {
-                arrResult.add(role);
-            }
-            return arrResult;
-        }
-        return null;
-    }
     private Role findRole(String roleName) {
         return (Role) em.createNamedQuery("Role.findByRoleName").setParameter("roleName", roleName).getSingleResult();
     }
@@ -250,6 +214,17 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
         {
             return false;
         }
+    }
+    
+    @Override
+    public boolean deleteRole(String roleName) {
+        Role role = (Role) em.createNamedQuery("Role.findByRoleName").setParameter("roleName", roleName.toUpperCase()).getSingleResult();
+        for(User u : role.getUserCollection()) {
+            this.deleteUserRole(u.getId(), roleName);
+        }
+        Query deleteQuery = em.createQuery("DELETE FROM Role r WHERE r.roleName = :role");
+        deleteQuery.setParameter("role", roleName).executeUpdate();
+        return true;
     }
 
     @Override
@@ -748,4 +723,6 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
             return null;
         }
     }
+
+
 }

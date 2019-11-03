@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -64,11 +65,11 @@ public class Store implements Serializable {
     private String email;
     @Column(name = "status")
     private Boolean status;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "storeId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "storeId", fetch=FetchType.EAGER)
     private Collection<IoWarehouse> ioWarehouseCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "storeId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "storeId", fetch=FetchType.EAGER)
     private Collection<User> userCollection;
-    @OneToMany(mappedBy = "storeId")
+    @OneToMany(mappedBy = "storeId", fetch=FetchType.EAGER)
     private Collection<Order1> order1Collection;
 
     public Store() {
@@ -180,7 +181,7 @@ public class Store implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.tdt.entity.Store[ id=" + id + " ]";
+        return  "   "+this.id + "\t\t" + this.name +"\t" + this.phone +"\t" + this.address;
     }
     
 }

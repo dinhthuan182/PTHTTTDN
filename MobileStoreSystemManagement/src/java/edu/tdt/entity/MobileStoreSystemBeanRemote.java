@@ -34,13 +34,12 @@ public interface MobileStoreSystemBeanRemote {
     boolean deleteUser(Long id);
     void insertRole(String roleName);
     void insertUserRole(Long user_id, String roleName);
-    ArrayList<String> searchRole(String rolename);
     List<User> getAllUsers();//Done!
     User findUserById(Long id);
     List<Role> getAllRoles();
     List<User> getUsersByRole(String roleName);
-    List<Role> getRolesByUser(Long userId);
     boolean deleteUserRole(Long user_id, String roleName);
+    boolean deleteRole(String roleName);
     
     //Product Management
     Product insertProduct(String name, Long supplierId, Integer afterCamera, Integer beforeCamera, String color ,String description, Integer memory ,String operator ,Integer price ,Integer warranty ,String screen,String pin);
