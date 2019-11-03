@@ -976,7 +976,7 @@ public class TestSystem {
                         
                     case 6: //Order Management
                         Long order_id, order_customer_id, order_staff_id, order_store_id, order_product_id;
-                        BigInteger order_total;
+                        boolean order_has, order_res;
                         String order_customer_fullname, order_customer_address, order_customer_phone, order_customer_email, order_note;
                         int orderChoice, order_next, order_quantity;
                         Store store_finded;
@@ -993,6 +993,7 @@ public class TestSystem {
                                     break;
                                     
                                 case 2: //Add Order
+                                    productlist = new ArrayList();
                                     System.out.print("Enter customer name : ");
                                     order_customer_fullname = sc.nextLine();
                                     System.out.print("Enter customer address :");
@@ -1021,17 +1022,31 @@ public class TestSystem {
                                             }
                                             System.out.print("Enter quantity of "+p.getName()+": ");
                                             order_quantity = Integer.parseInt(sc.nextLine());
-                                            
                                             OrderDetail order = new OrderDetail();
                                             order.setProduct(p);
                                             order.setQuantity(order_quantity);
                                             order.setPrice(p.getPrice());
-                                            productlist.add(order);
-                                     
+
+                                            order_has=false;
+                                            for(OrderDetail o : productlist) {
+                                                if(o.getProduct().equals(order.getProduct())) {
+                                                    o.setQuantity(o.getQuantity() + order_quantity);
+                                                    order_has = true;
+                                                }
+                                            }
+                                            if(!order_has) {
+                                                productlist.add(order); 
+                                            }
+                                            
                                         } else if(order_next == 2) {
                                             System.out.print("Enter product id : ");
                                             order_product_id = Long.parseLong(sc.nextLine());
-                                            productlist.remove(new Product(order_product_id));
+                                            for (int j = 0; j<productlist.size(); j++) {
+                                                if(productlist.get(j).getProduct().getId() == order_product_id)
+                                                {
+                                                    productlist.remove(j);
+                                                }
+                                            }
                                             
                                         } else {
                                             break;
@@ -1053,6 +1068,7 @@ public class TestSystem {
                                     break;
                                     
                                 case 3: //Edit Order
+                                    productlist = new ArrayList();
                                     System.out.print("Enter order id : ");
                                     order_id = Long.parseLong(sc.nextLine());
                                     order_finded = session.findOrderById(order_id);
@@ -1062,15 +1078,15 @@ public class TestSystem {
                                     }else {
                                         productlist.addAll(order_finded.getOrderDetailCollection());
                                     }
-                                    System.out.print("Enter customer name : ");
+                                    System.out.print("Enter customer new name : ");
                                     order_customer_fullname = sc.nextLine();
-                                    System.out.print("Enter customer address :");
+                                    System.out.print("Enter customer new address :");
                                     order_customer_address = sc.nextLine();
-                                    System.out.print("Enter customer phone : ");
+                                    System.out.print("Enter customer new phone : ");
                                     order_customer_phone = sc.nextLine();
-                                    System.out.print("Enter customer email : ");                                   
+                                    System.out.print("Enter customer new email : ");                                   
                                     order_customer_email = sc.nextLine();
-                                    System.out.print("Enter store id : ");
+                                    System.out.print("Enter store new id : ");
                                     order_store_id  = Long.parseLong(sc.nextLine());
                                     store_finded = session.findStoreById(order_store_id);
                                     if(store_finded == null) {
@@ -1090,27 +1106,49 @@ public class TestSystem {
                                             }
                                             System.out.print("Enter quantity of "+p.getName()+": ");
                                             order_quantity = Integer.parseInt(sc.nextLine());
-                                            
                                             OrderDetail order = new OrderDetail();
                                             order.setProduct(p);
                                             order.setQuantity(order_quantity);
                                             order.setPrice(p.getPrice());
-                                            productlist.add(order);
-                                     
+
+                                            order_has=false;
+                                            for(OrderDetail o : productlist) {
+                                                if(o.getProduct().equals(order.getProduct())) {
+                                                    o.setQuantity(o.getQuantity() + order_quantity);
+                                                    order_has = true;
+                                                }
+                                            }
+                                            if(!order_has) {
+                                                productlist.add(order); 
+                                            }
+                                            
                                         } else if(order_next == 2) {
                                             System.out.print("Enter product id : ");
                                             order_product_id = Long.parseLong(sc.nextLine());
-                                            productlist.remove(new Product(order_product_id));
+                                            for (int j = 0; j<productlist.size(); j++) {
+                                                if(productlist.get(j).getProduct().getId() == order_product_id)
+                                                {
+                                                    productlist.remove(j);
+                                                }
+                                            }
                                             
                                         } else {
                                             break;
                                         }
                                     }while(order_next != 3);
-                                    for(int i =0; i<productlist.size(); i++) {
+                                    for(int i = 0; i < productlist.size(); i++) {
                                         System.out.println(i +". "+ productlist.get(i).getProduct().getName() +" "+ productlist.get(i).getPrice() +" "+ productlist.get(i).getQuantity());
                                     }
                                     System.out.print("Note : ");
                                     order_note = sc.nextLine();
+                                    order_res = session.updateOrder(order_id, order_customer_fullname, order_customer_address, order_customer_phone, order_customer_email, store_finded, current_user, productlist, order_note);
+                                    if(order_res)
+                                    {
+                                        System.out.println("Update Successful!");
+                                    }else
+                                    {
+                                        System.out.println("Update Faild!");
+                                    }
                                     System.out.println("----------------------------------");
                                     break;
                                     
@@ -1135,6 +1173,13 @@ public class TestSystem {
                         
                     case 7: //IO Warehouse Management
                         int warehouseChoice;
+                        Long w_id, w_store_id, w_staff_id, w_product_id;
+                        Boolean w_import, w_has, w_res;
+                        int w_price, w_quantity, w_next;
+                        Product w_product;
+                        Store w_store;
+                        List<IoDetail> w_list;
+                        IoWarehouse w_finded;
                         do{
                             showIOWarehouseMenuGUI();
                             warehouseChoice = Integer.parseInt(sc.nextLine());
@@ -1146,17 +1191,165 @@ public class TestSystem {
                                     break;
                                     
                                 case 2: //Add IO Warehouse
-                                    
+                                    w_list = new ArrayList();
+                                    System.out.print("Choise import(true) or export(false) :");
+                                    w_import = Boolean.parseBoolean(sc.nextLine());
+                                    System.out.print("Enter store id : ");
+                                    w_store_id = Long.parseLong(sc.nextLine());
+                                    w_store = session.findStoreById(w_store_id);
+                                    if(w_store == null) {
+                                        System.out.print("The store is not exist!");
+                                        break;
+                                    }
+                                    do {
+                                        System.out.print("1. Add product.\n2. Delete product.\n3. Finish.\nEnter choise : ");
+                                        w_next = Integer.parseInt(sc.nextLine());
+                                        if(w_next == 1) {
+                                            System.out.print("Enter product id : ");
+                                            w_product_id = Long.parseLong(sc.nextLine());
+                                            w_product = session.findProductById(w_product_id);
+                                            if(w_product == null) {
+                                                System.out.print("The product is not exist!");
+                                                break;
+                                            }
+                                            if(w_import) {
+                                                System.out.print("Enter price of "+w_product.getName()+": ");
+                                                w_price = Integer.parseInt(sc.nextLine());
+                                            } else {
+                                                w_price = w_product.getPrice();
+                                            }
+                                            System.out.print("Enter quantity of "+w_product.getName()+": ");
+                                            w_quantity = Integer.parseInt(sc.nextLine());
+                                            
+                                            IoDetail ware = new IoDetail();
+                                            ware.setProduct(w_product);
+                                            ware.setPrice(w_price);
+                                            ware.setQuantity(w_quantity);
+
+                                            w_has = false;
+                                            for(IoDetail i : w_list) {
+                                                if(i.getProduct().equals(ware.getProduct())) {
+                                                    i.setQuantity(i.getQuantity() + w_quantity);
+                                                    w_has = true;
+                                                }
+                                            }
+                                            if(!w_has) {
+                                                w_list.add(ware); 
+                                            }
+                                            
+                                        } else if(w_next == 2) {
+                                            System.out.print("Enter product id : ");
+                                            order_product_id = Long.parseLong(sc.nextLine());
+                                            for (int j = 0; j < w_list.size(); j++) {
+                                                if(w_list.get(j).getProduct().getId() == order_product_id)
+                                                {
+                                                    w_list.remove(j);
+                                                }
+                                            }
+                                            
+                                        } else {
+                                            break;
+                                        }
+                                    }while(w_next != 3);
+                                    IoWarehouse w_created = session.insertIoWarehouse(w_store, current_user, w_list, w_import);
+                                    if(w_created != null) {
+                                        System.out.println("Create successfull");
+                                    } else {
+                                        System.out.println("Create faild");
+                                    }
                                     System.out.println("----------------------------------");
                                     break;
                                     
                                 case 3: //Edit IO Warehouse
+                                    w_list = new ArrayList();
+                                    System.out.print("Enter io warehouse id : ");
+                                    w_id = Long.parseLong(sc.nextLine());
+                                    w_finded = session.findIoWarehouselById(w_id);
+                                    if(w_finded == null) {
+                                        System.out.println("The id is not exist!");
+                                        break;
+                                    }else {
+                                        w_list.addAll(w_finded.getIoDetailCollection());
+                                    }
+                                    System.out.print("Choise import(true) or export(false) :");
+                                    w_import = Boolean.parseBoolean(sc.nextLine());
+                                    System.out.print("Enter new store id : ");
+                                    w_store_id = Long.parseLong(sc.nextLine());
+                                    w_store = session.findStoreById(w_store_id);
+                                    if(w_store == null) {
+                                        System.out.print("The store is not exist!");
+                                        break;
+                                    }
                                     
+                                    do {
+                                        System.out.print("1. Add product.\n2. Delete product.\n3. Finish.\nEnter choise : ");
+                                        w_next = Integer.parseInt(sc.nextLine());
+                                        if(w_next == 1) {
+                                            System.out.print("Enter product id : ");
+                                            w_product_id = Long.parseLong(sc.nextLine());
+                                            w_product = session.findProductById(w_product_id);
+                                            if(w_product == null) {
+                                                System.out.print("The product is not exist!");
+                                                break;
+                                            }
+                                            if(w_import) {
+                                                System.out.print("Enter price of "+w_product.getName()+": ");
+                                                w_price = Integer.parseInt(sc.nextLine());
+                                            } else {
+                                                w_price = w_product.getPrice();
+                                            }
+                                            System.out.print("Enter quantity of "+w_product.getName()+": ");
+                                            w_quantity = Integer.parseInt(sc.nextLine());
+                                            
+                                            IoDetail ware = new IoDetail();
+                                            ware.setProduct(w_product);
+                                            ware.setPrice(w_price);
+                                            ware.setQuantity(w_quantity);
+
+                                            w_has = false;
+                                            for(IoDetail i : w_list) {
+                                                if(i.getProduct().equals(ware.getProduct())) {
+                                                    i.setQuantity(i.getQuantity() + w_quantity);
+                                                    w_has = true;
+                                                }
+                                            }
+                                            if(!w_has) {
+                                                w_list.add(ware); 
+                                            }
+                                            
+                                        } else if(w_next == 2) {
+                                            System.out.print("Enter product id : ");
+                                            order_product_id = Long.parseLong(sc.nextLine());
+                                            for (int j = 0; j < w_list.size(); j++) {
+                                                if(w_list.get(j).getProduct().getId() == order_product_id)
+                                                {
+                                                    w_list.remove(j);
+                                                }
+                                            }
+                                            
+                                        } else {
+                                            break;
+                                        }
+                                    }while(w_next != 3);
+                                    w_res = session.updateIoWarehouse(w_id, w_store, current_user, w_list, w_import);
+                                    if(w_res) {
+                                        System.out.println("Create successfull");
+                                    } else {
+                                        System.out.println("Create faild");
+                                    }
                                     System.out.println("----------------------------------");
                                     break;
                                     
                                 case 4: //Remove IO Warehouse
-                                    
+                                    System.out.print("Enter io warehouse id : ");
+                                    w_id = Long.parseLong(sc.nextLine());
+                                    if(session.deleteIoWarehouse(w_id))
+                                    {
+                                        System.out.println("Delete Successful!");
+                                    }else
+                                    {
+                                        System.out.println("Delete Faild!");
+                                    }
                                     System.out.println("----------------------------------");
                                     break;
                                     

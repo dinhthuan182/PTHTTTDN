@@ -13,6 +13,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -52,10 +53,10 @@ public class IoWarehouse implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date createdAt;
     @Column(name = "total")
-    private BigInteger total;
+    private Integer total;
     @Column(name = "import")
     private Boolean import1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ioWarehouse")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ioWarehouse", fetch=FetchType.EAGER)
     private Collection<IoDetail> ioDetailCollection;
     @JoinColumn(name = "store_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
@@ -87,11 +88,11 @@ public class IoWarehouse implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public BigInteger getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(BigInteger total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 

@@ -1,6 +1,5 @@
 package edu.tdt.entity;
 
-import java.math.BigInteger;
 import java.util.Date;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.CollectionAttribute;
@@ -12,8 +11,8 @@ import javax.persistence.metamodel.StaticMetamodel;
 public abstract class Order1_ {
 
 	public static volatile SingularAttribute<Order1, Date> createdAt;
-	public static volatile SingularAttribute<Order1, Character> note;
-	public static volatile SingularAttribute<Order1, BigInteger> total;
+	public static volatile SingularAttribute<Order1, String> note;
+	public static volatile SingularAttribute<Order1, Integer> total;
 	public static volatile CollectionAttribute<Order1, OrderDetail> orderDetailCollection;
 	public static volatile SingularAttribute<Order1, Customer> customerId;
 	public static volatile SingularAttribute<Order1, Long> id;

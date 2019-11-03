@@ -36,7 +36,7 @@ public class IoDetail implements Serializable {
     @EmbeddedId
     protected IoDetailPK ioDetailPK;
     @Column(name = "price")
-    private BigInteger price;
+    private Integer price;
     @Column(name = "quantity")
     private Integer quantity;
     @JoinColumn(name = "warehouse_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
@@ -65,11 +65,11 @@ public class IoDetail implements Serializable {
         this.ioDetailPK = ioDetailPK;
     }
 
-    public BigInteger getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(BigInteger price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

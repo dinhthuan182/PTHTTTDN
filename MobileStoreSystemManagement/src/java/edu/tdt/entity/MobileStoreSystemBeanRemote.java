@@ -65,14 +65,14 @@ public interface MobileStoreSystemBeanRemote {
     Customer findCustomerByPhone(String phone);
     //Order Management
     Order1 insertOrder(String customerName, String customerAddress, String customerPhone, String customerEmail, Store store, User staff, List<OrderDetail> productList, String note );
-    boolean updateOrder(Long id, BigInteger total , Character note );
+    boolean updateOrder(Long id , String customerName, String customerAddress, String customerPhone, String customerEmail, Store store, User staff, List<OrderDetail> productList, String note );
     boolean deleteOrder(Long id);
     List<Order1> getAllOrders();
     Order1 findOrderById(Long id);
     
     //IO Warehouse Management
-    IoWarehouse insertIoWarehouse(BigInteger price, BigInteger total , Boolean import1 );
-    boolean updateIoWarehouse(Long id, BigInteger price, BigInteger total , Boolean import1);
+    IoWarehouse insertIoWarehouse(Store store, User staff, List<IoDetail> wareList, Boolean import1);
+    boolean updateIoWarehouse(Long id, Store store, User staff, List<IoDetail> wareList, Boolean import1);
     boolean deleteIoWarehouse(Long id);
     List<IoWarehouse> getAllIoWarehouses();
     IoWarehouse findIoWarehouselById(Long id);

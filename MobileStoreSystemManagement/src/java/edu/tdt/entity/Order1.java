@@ -13,6 +13,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -55,7 +56,7 @@ public class Order1 implements Serializable {
     private Integer total;
     @Column(name = "note")
     private String note;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order1")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order1", fetch=FetchType.EAGER)
     private Collection<OrderDetail> orderDetailCollection;
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     @ManyToOne

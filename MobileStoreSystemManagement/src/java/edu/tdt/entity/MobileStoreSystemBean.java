@@ -512,43 +512,77 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public Order1 insertOrder(String customerName, String customerAddress, String customerPhone, String customerEmail, Store store, User staff, List<OrderDetail> productList, String note) {
-        int total = 0;
-        Customer customer = findCustomerByPhone(customerPhone);
-        if(customer == null) {
-            customer = this.insertCustomer(customerName, customerAddress, customerPhone, customerEmail);
+        try {
+            int total = 0;
+            Customer customer = findCustomerByPhone(customerPhone);
+            if(customer == null) {
+                customer = this.insertCustomer(customerName, customerAddress, customerPhone, customerEmail);
+            }
+            //total = price * quantity
+            for(OrderDetail detail :productList ) {
+                total +=  detail.getQuantity()*detail.getPrice();
+            }
+            //Create order
+            Order1 order = new Order1();
+            order.setCustomerId(customer);
+            order.setStoreId(store);
+            order.setStaffId(staff);
+            order.setCreatedAt(new Date());
+            order.setTotal(total);
+            order.setNote(note);
+            em.persist(order);
+
+            for(OrderDetail detail :productList ) {
+                this.insertOrderDetail(order, detail.getProduct(), detail.getPrice(), detail.getQuantity());
+            }
+
+            return order;
+        } catch (Exception e) {
+            return null;
         }
-        //total = price * quantity
-        for(OrderDetail detail :productList ) {
-            total +=  detail.getQuantity()*detail.getPrice();
-        }
-        //Create order
-        Order1 order = new Order1();
-        order.setCustomerId(customer);
-        order.setStoreId(store);
-        order.setStaffId(staff);
-        order.setCreatedAt(new Date());
-        order.setTotal(total);
-        order.setNote(note);
-        em.persist(order);
-        
-        for(OrderDetail detail :productList ) {
-            this.insertOrderDetail(order, detail.getProduct(), detail.getPrice(), detail.getQuantity());
-        }
-        
-        return order;
     }
 
     @Override
-    public boolean updateOrder(Long id, BigInteger total, Character note) {
-        Order1 order = em.find(Order1.class, id);
+    public boolean updateOrder(Long id, String customerName, String customerAddress, String customerPhone, String customerEmail, Store store, User staff, List<OrderDetail> productList, String note) { 
         try
         {
-            Query updateQuery = em.createQuery("UPDATE Order1 AS o SET o.createdAt = :createdAt, o.total = :total, o.note = : note  WHERE o.id = :id");
-            //updateQuery.setParameter("createdAt", createdAt);
+            boolean set = false;
+            Order1 order_finded = em.find(Order1.class, id);
+            int total = 0;
+            Customer customer = this.findCustomerByPhone(customerPhone);
+            if(customer == null) {
+                customer = this.insertCustomer(customerName, customerAddress, customerPhone, customerEmail);
+            } else {
+                this.updateCustomer(customer.getId(), customerName, customerAddress, customerPhone, customerEmail);
+            }
+            //this.deleteOrderDetail(order_finded);
+            //total = price * quantity
+            for(OrderDetail detail :productList ) {
+                total +=  detail.getQuantity()*detail.getPrice();
+            }
+            Query updateQuery = em.createQuery("UPDATE Order1 AS o SET o.customerId = :customer, o.staffId = :staff, o.storeId = :store, o.total = :total, o.note = :note  WHERE o.id = :id");
+            updateQuery.setParameter("customer", customer);
+            updateQuery.setParameter("staff", staff);
+            updateQuery.setParameter("store", store);
             updateQuery.setParameter("total", total);
             updateQuery.setParameter("note", note);
-            updateQuery.setParameter("id", order.getId());
+            updateQuery.setParameter("id", order_finded.getId());
             updateQuery.executeUpdate();
+            for(OrderDetail d : productList) {
+                for(OrderDetail detail : order_finded.getOrderDetailCollection()) {
+                    if(detail.getProduct().getId() == d.getProduct().getId()) {
+                        this.updateOrderDetail(order_finded, detail.getProduct(), detail.getPrice(), detail.getQuantity());
+                        set = true;
+                    }else {
+                        set = false;
+                    }
+                }
+                if(!set) {
+                    this.insertOrderDetail(order_finded, d.getProduct(), d.getPrice(), d.getQuantity());
+                    set = false;
+                }
+            }
+            
             return true;
         }catch(Exception e)
         {
@@ -571,9 +605,28 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
         }  
     }
     
+    public void insertOrderDetail(Order1 order, Product product, int price, int quantity) {
+        OrderDetail oDetail = new OrderDetail();
+        oDetail.setOrder1(order);
+        oDetail.setProduct(product);
+        oDetail.setOrderDetailPK(new OrderDetailPK(order.getId(), product.getId()));
+        oDetail.setPrice(price);
+        oDetail.setQuantity(quantity);
+        em.persist(oDetail);
+    }
+    
+    public void updateOrderDetail(Order1 order, Product product, int price, int quantity) {
+        Query updateQuery = em.createQuery("UPDATE OrderDetail AS od SET od.price = :price, od.quantity = :quantity  WHERE od.order1.id = :order AND od.product.id = :product");
+        updateQuery.setParameter("price", price);
+        updateQuery.setParameter("quantity", quantity);
+        updateQuery.setParameter("order", order.getId());
+        updateQuery.setParameter("product", product.getId());
+        updateQuery.executeUpdate();
+    }
+    
     public void deleteOrderDetail(Order1 order) {
-        Query deleteDetailQuery = em.createQuery("DELETE FROM OrderDetail od WHERE od.order1 = :order");
-        deleteDetailQuery.setParameter("order", order).executeUpdate();
+        Query deleteDetailQuery = em.createQuery("DELETE FROM OrderDetail od WHERE od.order1.id = :order");
+        deleteDetailQuery.setParameter("order", order.getId()).executeUpdate();
     }
 
     @Override
@@ -587,19 +640,64 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
     }
 
     @Override
-    public IoWarehouse insertIoWarehouse(BigInteger price, BigInteger total, Boolean import1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IoWarehouse insertIoWarehouse(Store store, User staff, List<IoDetail> wareList, Boolean import1) {
+        int total = 0;
+        for(IoDetail i : wareList) {
+            total += (i.getPrice() * i.getQuantity());
+        }
+        IoWarehouse newIo = new IoWarehouse();
+        newIo.setStoreId(store);
+        newIo.setStaffId(staff);
+        newIo.setTotal(total);
+        newIo.setCreatedAt(new Date());
+        newIo.setImport1(import1);
+        em.persist(newIo);
+        for(IoDetail i : wareList) {
+            this.insertIoDetail(newIo, i.getProduct(), i.getPrice(), i.getQuantity());
+        }
+        
+        return newIo;
     }
 
     @Override
-    public boolean updateIoWarehouse(Long id, BigInteger price, BigInteger total, Boolean import1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean updateIoWarehouse(Long id, Store store, User staff, List<IoDetail> wareList, Boolean import1) {
+        boolean set = false;
+        IoWarehouse ware_finded = em.find(IoWarehouse.class, id);
+        int total = 0;
+        //total = price * quantity
+        for(IoDetail detail :wareList ) {
+            total +=  detail.getQuantity()*detail.getPrice();
+        }
+        Query updateQuery = em.createQuery("UPDATE IoWarehouse AS o SET o.storeId = :store, o.staffId = :staff, o.total = :total WHERE o.id = :id");
+        updateQuery.setParameter("staff", staff);
+        updateQuery.setParameter("store", store);
+        updateQuery.setParameter("total", total);
+        updateQuery.setParameter("id", ware_finded.getId());
+        updateQuery.executeUpdate();
+        for(IoDetail d : wareList) {
+            for(IoDetail detail : ware_finded.getIoDetailCollection()) {
+                if(detail.getProduct().getId() == d.getProduct().getId()) {
+                    this.updateIoDetail(ware_finded, detail.getProduct(), detail.getPrice(), detail.getQuantity());
+                    set = true;
+                }else {
+                    set = false;
+                }
+            }
+            if(!set) {
+                this.insertIoDetail(ware_finded, d.getProduct(), d.getPrice(), d.getQuantity());
+                set = false;
+            }
+        }
+
+        return true;
     }
 
     @Override
     public boolean deleteIoWarehouse(Long id) {
         try
         {
+            IoWarehouse wareFinded = (IoWarehouse) em.createNamedQuery("IoWarehouse.findById").setParameter("id", id).getSingleResult();
+            deleteIoDetail(wareFinded);
             Query deleteQuery = em.createQuery("DELETE FROM IoWarehouse i WHERE i.id = :id");
             deleteQuery.setParameter("id", id).executeUpdate();
             return true;
@@ -607,6 +705,29 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
         {
             return false;
         } 
+    }
+    public void insertIoDetail(IoWarehouse warehouse, Product product, int price, int quantity) {
+        IoDetail io = new IoDetail();
+        io.setIoDetailPK(new IoDetailPK(warehouse.getId(), product.getId()));
+        io.setIoWarehouse(warehouse);
+        io.setProduct(product);
+        io.setPrice(price);
+        io.setQuantity(quantity);
+        em.persist(io);
+    }
+    
+    public void updateIoDetail(IoWarehouse warehouse, Product product, int price, int quantity) {
+        Query updateQuery = em.createQuery("UPDATE IoDetail AS io SET io.price = :price, io.quantity = :quantity  WHERE io.ioWarehouse.id = :warehouse AND io.product.id = :product");
+        updateQuery.setParameter("price", price);
+        updateQuery.setParameter("quantity", quantity);
+        updateQuery.setParameter("warehouse", warehouse.getId());
+        updateQuery.setParameter("product", product.getId());
+        updateQuery.executeUpdate();
+    }
+    
+    public void deleteIoDetail(IoWarehouse warehouse) {
+        Query deleteDetailQuery = em.createQuery("DELETE FROM IoDetail io WHERE io.ioWarehouse.id = :ware");
+        deleteDetailQuery.setParameter("ware", warehouse.getId()).executeUpdate();
     }
 
     @Override
@@ -617,16 +738,6 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
     @Override
     public IoWarehouse findIoWarehouselById(Long id) {
         return (IoWarehouse) em.createNamedQuery("IoWarehouse.findById").setParameter("id", id).getSingleResult();
-    }
-
-    public void insertOrderDetail(Order1 order, Product product, int price, int quantity) {
-        OrderDetail oDetail = new OrderDetail();
-        oDetail.setOrder1(order);
-        oDetail.setProduct(product);
-        oDetail.setOrderDetailPK(new OrderDetailPK(order.getId(), product.getId()));
-        oDetail.setPrice(price);
-        oDetail.setQuantity(quantity);
-        em.persist(oDetail);
     }
 
     @Override
