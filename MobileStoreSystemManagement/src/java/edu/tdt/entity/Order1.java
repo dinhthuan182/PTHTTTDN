@@ -162,7 +162,7 @@ public class Order1 implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.tdt.entity.Order1[ id=" + id + " ]";
+        return String.format("%3s %2s %17s %3s %12s %3s %10s %3s %5s %5s %8s", this.id, "|", this.customerId.getFullname().replaceAll("\\s\\s", ""), "|", this.storeId.getName().replaceAll("\\s\\s", ""), "|", this.staffId.getUserName().replaceAll("\\s\\s", ""), "|", this.total, "|", this.createdAt);
     }
     
 }

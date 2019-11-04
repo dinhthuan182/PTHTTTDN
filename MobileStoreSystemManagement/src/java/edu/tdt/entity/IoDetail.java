@@ -119,7 +119,7 @@ public class IoDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.tdt.entity.IoDetail[ ioDetailPK=" + ioDetailPK + " ]";
+        return String.format("%25s %5s %6s %5s", this.product.getName().replaceAll("\\s\\s", ""), "|", this.price, "|", this.quantity);
     }
     
 }

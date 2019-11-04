@@ -127,7 +127,7 @@ public class TestSystem {
         System.out.println("\n==================================");
         System.out.println("Mobile Order Management");
         System.out.println("----------------------------------");
-        System.out.print("Options: \n1. List Order \n2. Add Order \n3. Edit Order \n4. Remove Order \n5. Exit \nEnter Choice: ");
+        System.out.print("Options: \n1. List Order \n2. Add Order \n3. Edit Order \n4. Remove Order \n5. Order Detail \n6. Exit \nEnter Choice: ");
     }
     
     private void showIOWarehouseMenuGUI()
@@ -135,14 +135,14 @@ public class TestSystem {
         System.out.println("\n==================================");
         System.out.println("Mobile IO Warehouse Management");
         System.out.println("----------------------------------");
-        System.out.print("Options: \n1. List IO Warehouse \n2. Add IO Warehouse \n3. Edit IO Warehouse \n4. Remove IO Warehouse \n5. Exit \nEnter Choice: ");
+        System.out.print("Options: \n1. List IO Warehouse \n2. Add IO Warehouse \n3. Edit IO Warehouse \n4. Remove IO Warehouse \n5. Show Inventory Of Store \n6. Exit \nEnter Choice: ");
     }
     
     private void getAllStores()
     {
         try
         {
-        // We can define another bean to access the LibrarySessionBeanRemote
+        // We can define another bean to access the MobileStoreSystemBeanRemote
         MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
         List<Store> storesList = libBean2.getAllStores();
 
@@ -155,10 +155,11 @@ public class TestSystem {
 
         System.out.println("==================================");
         System.out.println("------------List Store------------");
-        System.out.println("Store id\tStore name\t\t\tStore phone\tStore address\tEmployee");
-        for (int i = 0; i < storesList.size(); i++)
+        System.out.println(String.format("%3s %2s %8s %12s %10s %15s %8s %8s %8s %17s %10s", "ID", "|", "Name", "|", "Address", "|", "Phone", "|","email", "|", "Employee"));
+        System.out.println(String.format("%s", "------------------------------------------------------------------------------------------------------------------"));
+        for (Store s : storesList)
         {
-            System.out.println(storesList.get(i).toString()+"\t"+ storesList.get(i).getUserCollection().size());
+            System.out.println(s.toString());
         }
         System.out.println();
 
@@ -172,7 +173,7 @@ public class TestSystem {
     {
         try
         {
-        // We can define another bean to access the LibrarySessionBeanRemote
+        // We can define another bean to access the MobileStoreSystemBeanRemote
         MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
         List<User> usersList = libBean2.getAllUsers();
 
@@ -185,10 +186,11 @@ public class TestSystem {
 
         System.out.println("==================================");
         System.out.println("------------List User-------------");
-        System.out.println("User id\tUsername\tFull name\tUser address\tUser numberphone\tUser email\tStore");
-        for (int i = 0; i < usersList.size(); i++)
+        System.out.println(String.format("%3s %2s %10s %5s %10s %12s %8s %10s %8s %8s %10s %15s %10s", "ID", "|", "Username", "|", "Fullname", "|", "Address", "|", "Phone", "|","email", "|", "Store"));
+        System.out.println(String.format("%s", "--------------------------------------------------------------------------------------------------------------------------------------"));
+        for (User u : usersList)
         {
-            System.out.println(usersList.get(i).toString()+"\t"+ usersList.get(i).getStoreId().getName());
+            System.out.println(String.format("%3s %2s %10s %5s %17s %5s %13s %5s %5s %1s %20s %5s %5s", u.getId(), "|", u.getUserName().replaceAll("\\s\\s", ""), "|", u.getFullName().replaceAll("\\s\\s", ""), "|", u.getAddress().replaceAll("\\s\\s", ""), "|", u.getPhone(), "|", u.getEmail().replaceAll("\\s\\s", ""), "|", u.getStoreId().getName()));
         }
         System.out.println();
 
@@ -202,7 +204,7 @@ public class TestSystem {
     {
         try
         {
-        // We can define another bean to access the LibrarySessionBeanRemote
+        // We can define another bean to access the MobileStoreSystemBeanRemote
         MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
         List<Role> rolesList = libBean2.getAllRoles();
 
@@ -218,7 +220,7 @@ public class TestSystem {
         System.out.println("STT\tRole name\tEmployee");
         for (int i = 0; i < rolesList.size(); i++)
         {
-            System.out.println(i+"\t"+rolesList.get(i).getRoleName()+"\t"+ rolesList.get(i).getUserCollection().size());
+            System.out.println(i+"\t"+rolesList.get(i).getRoleName().replaceAll("\\s\\s", "")+"\t\t"+ rolesList.get(i).getUserCollection().size());
         }
         System.out.println();
 
@@ -231,7 +233,7 @@ public class TestSystem {
     private void getUsersByRole(String role) {
         try
         {
-            // We can define another bean to access the LibrarySessionBeanRemote
+            // We can define another bean to access the MobileStoreSystemBeanRemote
             MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
             List<User> usersList = libBean2.getUsersByRole(role);
 
@@ -243,7 +245,8 @@ public class TestSystem {
 
             System.out.println("==================================");
             System.out.println("----------List "+ role +" Role---------");
-            System.out.println("User id\tUsername\tFull name\tUser address\tUser numberphone\tUser email\tStore");
+            System.out.println(String.format("%3s %2s %10s %5s %10s %12s %8s %10s %8s %8s %10s %15s %10s", "ID", "|", "Username", "|", "Fullname", "|", "Address", "|", "Phone", "|","email", "|", "Store"));
+            System.out.println(String.format("%s", "--------------------------------------------------------------------------------------------------------------------------------------"));
             for (int i = 0; i < usersList.size(); i++)
             {
                 System.out.println(usersList.get(i).toString());
@@ -259,7 +262,7 @@ public class TestSystem {
     private void getRolesByUser(Long id) {
         try
         {
-            // We can define another bean to access the LibrarySessionBeanRemote
+            // We can define another bean to access the MobileStoreSystemBeanRemote
             MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
             User user = libBean2.findUserById(id);
             List<Role> rolesList = (List<Role>) user.getRoleCollection();
@@ -288,7 +291,7 @@ public class TestSystem {
     {
         try
         {
-            // We can define another bean to access the LibrarySessionBeanRemote
+            // We can define another bean to access the MobileStoreSystemBeanRemote
             MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
             List<Product> productsList = libBean2.getAllProducts();
 
@@ -300,10 +303,12 @@ public class TestSystem {
             }
 
             System.out.println("==================================");
-            System.out.println("-----------List Product------------");
-            for (int i = 0; i < productsList.size(); i++)
+            System.out.println("-----------List Product-----------");
+            System.out.println(String.format("%3s %2s %10s %17s %10s %2s %11s %10s %8s %2s %10s %2s %12s %20s %4s %2s %10s %14s %5s", "ID", "|", "Name", "|", "Supplier", "|", "Operator", "|", "Memory", "|", "Color", "|","Screen", "|", "Camera(After-Before)", "|", "Pin", "|", "Price($)"));
+            System.out.println(String.format("%s", "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"));
+            for (Product p : productsList)
             {
-                System.out.println(productsList.get(i).getId()+"\t"+ productsList.get(i).getName()+"\t"+productsList.get(i).getSupplierId().getName());
+                System.out.println(p.toString());
             }
             System.out.println();
 
@@ -317,11 +322,10 @@ public class TestSystem {
     {
         try
         {
-        // We can define another bean to access the LibrarySessionBeanRemote
+        // We can define another bean to access the MobileStoreSystemBeanRemote
         MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
         List<Supplier> suppliersList = libBean2.getAllSuppliers();
 
-        // Print all books
         if(suppliersList.isEmpty())
         {
             System.out.println("There is no supplier in the system!\n");
@@ -330,9 +334,11 @@ public class TestSystem {
 
         System.out.println("==================================");
         System.out.println("-----------List Supplier------------");
-        for (int i = 0; i < suppliersList.size(); i++)
+        System.out.println(String.format("%3s %2s %8s %12s %10s %15s %8s %8s %8s %17s %6s", "ID", "|", "Name", "|", "Address", "|", "Phone", "|","email", "|", "Product"));
+        System.out.println(String.format("%s", "---------------------------------------------------------------------------------------------------------------"));
+        for (Supplier s : suppliersList)
         {
-            System.out.println(suppliersList.get(i).getId()+"\t"+ suppliersList.get(i).getName()+"\t"+suppliersList.get(i).getEmail());
+            System.out.println(s.toString());
         }
         System.out.println();
 
@@ -346,7 +352,7 @@ public class TestSystem {
     {
         try
         {
-        // We can define another bean to access the LibrarySessionBeanRemote
+        // We can define another bean to access the MobileStoreSystemBeanRemote
         MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
         List<Customer> customersList = libBean2.getAllCustomers();
 
@@ -358,10 +364,12 @@ public class TestSystem {
         }
 
         System.out.println("==================================");
-        System.out.println("-----------List Customer------------");
-        for (int i = 0; i < customersList.size(); i++)
+        System.out.println("----------List Customer-----------");
+        System.out.println(String.format("%3s %2s %8s %12s %10s %15s %8s %8s %8s %17s %8s", "ID", "|", "Fullname", "|", "Address", "|", "Phone", "|","email", "|", "Order"));
+        System.out.println(String.format("%s", "----------------------------------------------------------------------------------------------------------------"));
+        for (Customer c : customersList)
         {
-            System.out.println(customersList.get(i).getId()+"\t"+ customersList.get(i).getFullname()+"\t"+customersList.get(i).getOrder1Collection().size());
+            System.out.println(c.toString());
         }
         System.out.println();
 
@@ -387,10 +395,12 @@ public class TestSystem {
         }
 
         System.out.println("==================================");
-        System.out.println("-----------List Order------------");
-        for (int i = 0; i < ordersList.size(); i++)
+        System.out.println("-----------List Order-------------");
+        System.out.println(String.format("%3s %2s %8s %12s %8s %9s %7s %6s %8s %2s %8s", "ID", "|", "Cutomer", "|", "Store", "|", "Staff", "|","Total($)", "|", "Date"));
+        System.out.println(String.format("%s", "------------------------------------------------------------------------------------------"));
+        for (Order1 o : ordersList)
         {
-            System.out.println(ordersList.get(i).getId()+"\t"+ ordersList.get(i).getCustomerId().getFullname() +"\t"+ ordersList.get(i).getStoreId().getName() +"\t"+ ordersList.get(i).getTotal());
+            System.out.println(o.toString());
         }
         System.out.println();
 
@@ -416,16 +426,97 @@ public class TestSystem {
         }
 
         System.out.println("==================================");
-        System.out.println("-----------List IO Warehouse------------");
-        for (int i = 0; i < warehousesList.size(); i++)
+        System.out.println("--------List IO Warehouse---------");
+        System.out.println(String.format("%3s %2s %8s %12s %8s %7s %7s %6s %8s %2s %8s", "ID", "|", "Store", "|", "Staff", "|", "Date", "|","Total($)", "|", "Status"));
+        System.out.println(String.format("%s", "-------------------------------------------------------------------------------------"));
+        for (IoWarehouse i : warehousesList)
         {
-            System.out.println(warehousesList.get(i).getId()+"\t"+ warehousesList.get(i).getStoreId().getName()+"\t"+warehousesList.get(i).getImport1());
+            System.out.println(i.toString());
         }
         System.out.println();
 
         } catch (NamingException ex)
         {
             ex.getMessage();
+        }
+    }
+    
+    private void ViewOrderDetail(Long id) {
+        try {
+            int count = 0;
+            MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
+            Order1 order = libBean2.findOrderById(id);
+            if(order == null)
+            {
+                System.out.println("There is no order in the system!\n");
+                return;
+            }
+            System.out.println("==================================");
+            System.out.println("-----------Order Detail-----------");
+            System.out.println("Customer : " + order.getCustomerId().toString());
+            System.out.println("Store : "+ order.getStoreId().getName());
+            System.out.println("Staff : "+ order.getStaffId().getUserName());
+            System.out.println("Date : "+ order.getCreatedAt());
+            System.out.println("Product list : ");
+            List<OrderDetail> oderList = libBean2.getOrderDetailById(order.getId());
+            System.out.println(String.format("%3s %2s %8s %20s %6s %3s %5s %2s %5s", "STT", "|", "Product", "|", "Price", "|", "Quantity", "|", "Sum"));
+            System.out.println(String.format("%s", "---------------------------------------------------------------------------"));
+            for(int y = 0; y < oderList.size(); y++) {
+                System.out.println(String.format("%3s %2s %25s %3s %6s %3s %5s %5s %5s", (y+1), "|", oderList.get(y).getProduct().getName().replaceAll("\\s\\s", ""), "|", oderList.get(y).getPrice(), "|", oderList.get(y).getQuantity(), "|", (oderList.get(y).getPrice() * oderList.get(y).getQuantity())));
+            }
+            System.out.println("Total : "+ order.getTotal());
+            System.out.println("Note : "+ order.getNote());
+        }catch (Exception e) {
+            e.getMessage();
+        }
+    }
+    
+    private void getInventoryByStore(Long id) {
+        try {
+            MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
+            Store store = libBean2.findStoreById(id);
+            if(store == null) {
+                System.out.println("The store is not exist in the system.");
+                return;
+            }
+            //List input/output warehouse
+            List<IoWarehouse> wareList = libBean2.getIoWarehousesByStore(store);
+            if(wareList == null) {
+                System.out.println("The store is empty io warehouse.");
+                return;
+            }
+            List<IoDetail> inventory = new ArrayList();
+            boolean exist;
+            for(IoWarehouse iw : wareList) {
+                for(IoDetail d1 : libBean2.getIoDetailById(iw.getId())) {
+                    exist = false;
+                    for(IoDetail d2 : inventory) {
+                        if(d2.getProduct().getId() == d1.getProduct().getId()) {
+                            //Sum quantity of product if exist in list
+                            if(iw.getImport1()){
+                                d2.setQuantity(d2.getQuantity() + d1.getQuantity());
+                            } else {
+                                d2.setQuantity(d2.getQuantity() - d1.getQuantity());
+                            }
+                            exist = true;
+                        }
+                    }
+                    if(!exist) {
+                        //Add new product if not exist
+                        inventory.add(d1);
+                        exist = false;
+                    }
+                }
+            }
+            System.out.println("Product list : ");
+            System.out.println(String.format("%3s %2s %8s %20s %8s %7s %5s", "STT", "|", "Product", "|", "Price", "|", "Quantity"));
+            System.out.println(String.format("%s", "------------------------------------------------------------------"));
+            for(int y = 0; y < inventory.size(); y++) {
+                System.out.println(String.format("%3s %2s %25s %3s %8s %7s %5s", (y+1), "|", inventory.get(y).getProduct().getName().replaceAll("\\s\\s", ""), "|", inventory.get(y).getPrice(), "|", inventory.get(y).getQuantity()));
+            }
+            
+        }catch(Exception e) {
+            e.getMessage();
         }
     }
     
@@ -457,7 +548,7 @@ public class TestSystem {
             
             //Collection<Role> userRole = current_user.getRoleCollection();
             System.out.println("==================================");
-            System.out.println("current user : " + current_user.getUserName() +" - "+ current_user.getRoleCollection());
+            System.out.println("current user : " + current_user.getUserName() +"-"+ current_user.getRoleCollection());
             
             System.out.println("----------------------------------");
 
@@ -1088,7 +1179,7 @@ public class TestSystem {
                                         System.out.println("The id is not exist!");
                                         break;
                                     }else {
-                                        productlist.addAll(order_finded.getOrderDetailCollection());
+                                        productlist.addAll(session.getOrderDetailById(order_finded.getId()));
                                     }
                                     System.out.print("Enter customer new name : ");
                                     order_customer_fullname = sc.nextLine();
@@ -1176,11 +1267,17 @@ public class TestSystem {
                                     }
                                     System.out.println("----------------------------------");
                                     break;
-                                    
+                                  
+                                case 5: //Get order detail
+                                    System.out.print("Enter order id : ");
+                                    order_id = Long.parseLong(sc.nextLine());
+                                    ViewOrderDetail(order_id);
+                                    System.out.println("----------------------------------");
+                                    break;
                                 default:
                                     break;
                             }
-                        } while(orderChoice != 5);
+                        } while(orderChoice != 6);
                         break;
                         
                     case 7: //IO Warehouse Management
@@ -1281,7 +1378,7 @@ public class TestSystem {
                                         System.out.println("The id is not exist!");
                                         break;
                                     }else {
-                                        w_list.addAll(w_finded.getIoDetailCollection());
+                                        w_list.addAll(session.getIoDetailById(w_finded.getId()));
                                     }
                                     System.out.print("Choise import(true) or export(false) :");
                                     w_import = Boolean.parseBoolean(sc.nextLine());
@@ -1364,11 +1461,17 @@ public class TestSystem {
                                     }
                                     System.out.println("----------------------------------");
                                     break;
-                                    
+                                
+                                case 5: //Show Inventory of Store
+                                    System.out.print("Enter store id : ");
+                                    w_store_id = Long.parseLong(sc.nextLine());
+                                    getInventoryByStore(w_store_id);
+                                    System.out.println("----------------------------------");
+                                    break;
                                 default:
                                     break;
                             }
-                        } while(warehouseChoice != 5);
+                        } while(warehouseChoice != 6);
                         break;
                         
                     default:

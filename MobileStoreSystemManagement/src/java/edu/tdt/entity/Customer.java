@@ -152,7 +152,7 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.tdt.entity.Customer[ id=" + id + " ]";
+        return String.format("%3s %2s %14s %6s %20s %5s %6s %1s %20s %5s %5s", this.id, "|", this.fullname.replaceAll("\\s\\s", ""), "|", this.address.replaceAll("\\s\\s", ""), "|", this.phone, "|", this.email.replaceAll("\\s\\s", ""), "|", this.order1Collection.size());
     }
     
 }

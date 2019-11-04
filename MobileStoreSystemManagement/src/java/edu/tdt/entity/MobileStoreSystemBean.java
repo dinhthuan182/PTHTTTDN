@@ -31,18 +31,22 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
     
     @Override
     public User insertUser(String userName, String userPassword, String fullName, String address, String phone, Long storeId, String email) {
-        User u = new User();
-        u.setUserName(userName);
-        u.setPassword(userPassword);
-        u.setFullName(fullName);
-        u.setAddress(address);
-        u.setPhone(phone);
-        u.setStoreId(this.findStoreById(storeId));
-        u.setEmail(email);
-        u.setStatus(Boolean.TRUE);
-        em.persist(u);
-        
-        return (User) em.createNamedQuery("User.findByUserName").setParameter("userName", u.getUserName()).getSingleResult();
+        try {
+            User u = new User();
+            u.setUserName(userName);
+            u.setPassword(userPassword);
+            u.setFullName(fullName);
+            u.setAddress(address);
+            u.setPhone(phone);
+            u.setStoreId(this.findStoreById(storeId));
+            u.setEmail(email);
+            u.setStatus(Boolean.TRUE);
+            em.persist(u);
+
+            return (User) em.createNamedQuery("User.findByUserName").setParameter("userName", u.getUserName()).getSingleResult();
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     @Override
@@ -218,13 +222,17 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
     
     @Override
     public boolean deleteRole(String roleName) {
-        Role role = (Role) em.createNamedQuery("Role.findByRoleName").setParameter("roleName", roleName.toUpperCase()).getSingleResult();
-        for(User u : role.getUserCollection()) {
-            this.deleteUserRole(u.getId(), roleName);
+        try {
+            Role role = (Role) em.createNamedQuery("Role.findByRoleName").setParameter("roleName", roleName.toUpperCase()).getSingleResult();
+            for(User u : role.getUserCollection()) {
+                this.deleteUserRole(u.getId(), roleName);
+            }
+            Query deleteQuery = em.createQuery("DELETE FROM Role r WHERE r.roleName = :role");
+            deleteQuery.setParameter("role", roleName).executeUpdate();
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        Query deleteQuery = em.createQuery("DELETE FROM Role r WHERE r.roleName = :role");
-        deleteQuery.setParameter("role", roleName).executeUpdate();
-        return true;
     }
 
     @Override
@@ -544,12 +552,11 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
             updateQuery.setParameter("id", order_finded.getId());
             updateQuery.executeUpdate();
             for(OrderDetail d : productList) {
+                set = false;
                 for(OrderDetail detail : order_finded.getOrderDetailCollection()) {
                     if(detail.getProduct().getId() == d.getProduct().getId()) {
                         this.updateOrderDetail(order_finded, detail.getProduct(), detail.getPrice(), detail.getQuantity());
                         set = true;
-                    }else {
-                        set = false;
                     }
                 }
                 if(!set) {
@@ -613,58 +620,71 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
     public Order1 findOrderById(Long id) {
         return (Order1) em.createNamedQuery("Order1.findById").setParameter("id", id).getSingleResult();
     }
+    
+    @Override
+    public List<OrderDetail> getOrderDetailById(Long id) {
+        Order1 order = this.findOrderById(id);
+        return em.createNamedQuery("OrderDetail.findByOrderId").setParameter("orderId", order.getId()).getResultList();
+    }
 
     @Override
     public IoWarehouse insertIoWarehouse(Store store, User staff, List<IoDetail> wareList, Boolean import1) {
-        int total = 0;
-        for(IoDetail i : wareList) {
-            total += (i.getPrice() * i.getQuantity());
+        try {
+            int total = 0;
+            for(IoDetail i : wareList) {
+                total += (i.getPrice() * i.getQuantity());
+            }
+            IoWarehouse newIo = new IoWarehouse();
+            newIo.setStoreId(store);
+            newIo.setStaffId(staff);
+            newIo.setTotal(total);
+            newIo.setCreatedAt(new Date());
+            newIo.setImport1(import1);
+            em.persist(newIo);
+            for(IoDetail i : wareList) {
+                this.insertIoDetail(newIo, i.getProduct(), i.getPrice(), i.getQuantity());
+            }
+
+            return newIo;
+        } catch (Exception e) {
+            return null;
         }
-        IoWarehouse newIo = new IoWarehouse();
-        newIo.setStoreId(store);
-        newIo.setStaffId(staff);
-        newIo.setTotal(total);
-        newIo.setCreatedAt(new Date());
-        newIo.setImport1(import1);
-        em.persist(newIo);
-        for(IoDetail i : wareList) {
-            this.insertIoDetail(newIo, i.getProduct(), i.getPrice(), i.getQuantity());
-        }
-        
-        return newIo;
     }
 
     @Override
     public boolean updateIoWarehouse(Long id, Store store, User staff, List<IoDetail> wareList, Boolean import1) {
-        boolean set = false;
-        IoWarehouse ware_finded = em.find(IoWarehouse.class, id);
-        int total = 0;
-        //total = price * quantity
-        for(IoDetail detail :wareList ) {
-            total +=  detail.getQuantity()*detail.getPrice();
-        }
-        Query updateQuery = em.createQuery("UPDATE IoWarehouse AS o SET o.storeId = :store, o.staffId = :staff, o.total = :total WHERE o.id = :id");
-        updateQuery.setParameter("staff", staff);
-        updateQuery.setParameter("store", store);
-        updateQuery.setParameter("total", total);
-        updateQuery.setParameter("id", ware_finded.getId());
-        updateQuery.executeUpdate();
-        for(IoDetail d : wareList) {
-            for(IoDetail detail : ware_finded.getIoDetailCollection()) {
-                if(detail.getProduct().getId() == d.getProduct().getId()) {
-                    this.updateIoDetail(ware_finded, detail.getProduct(), detail.getPrice(), detail.getQuantity());
-                    set = true;
-                }else {
+        try {
+            boolean set = false;
+            IoWarehouse ware_finded = em.find(IoWarehouse.class, id);
+            int total = 0;
+            //total = price * quantity
+            for(IoDetail detail :wareList ) {
+                total +=  detail.getQuantity()*detail.getPrice();
+            }
+            Query updateQuery = em.createQuery("UPDATE IoWarehouse AS o SET o.storeId = :store, o.staffId = :staff, o.total = :total WHERE o.id = :id");
+            updateQuery.setParameter("staff", staff);
+            updateQuery.setParameter("store", store);
+            updateQuery.setParameter("total", total);
+            updateQuery.setParameter("id", ware_finded.getId());
+            updateQuery.executeUpdate();
+            for(IoDetail d : wareList) {
+                set = false;
+                for(IoDetail detail : ware_finded.getIoDetailCollection()) {
+                    if(detail.getProduct().getId() == d.getProduct().getId()) {
+                        this.updateIoDetail(ware_finded, detail.getProduct(), detail.getPrice(), detail.getQuantity());
+                        set = true;
+                    }
+                }
+                if(!set) {
+                    this.insertIoDetail(ware_finded, d.getProduct(), d.getPrice(), d.getQuantity());
                     set = false;
                 }
             }
-            if(!set) {
-                this.insertIoDetail(ware_finded, d.getProduct(), d.getPrice(), d.getQuantity());
-                set = false;
-            }
-        }
 
-        return true;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -724,5 +744,16 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
         }
     }
 
+    @Override
+    public List<IoWarehouse> getIoWarehousesByStore(Store store) {
+        Query selectQuery = em.createQuery("SELECT iw FROM IoWarehouse iw WHERE iw.storeId = :store").setParameter("store", store);
+        return selectQuery.getResultList();
+    }
+
+    @Override
+    public List<IoDetail> getIoDetailById(Long id) {
+        IoWarehouse ware = (IoWarehouse) em.createNamedQuery("IoWarehouse.findById").setParameter("id", id).getSingleResult();
+        return em.createNamedQuery("IoDetail.findByWarehouseId").setParameter("warehouseId", ware.getId()).getResultList();       
+    }
 
 }

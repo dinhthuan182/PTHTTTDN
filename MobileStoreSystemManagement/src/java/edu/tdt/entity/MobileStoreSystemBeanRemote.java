@@ -68,6 +68,7 @@ public interface MobileStoreSystemBeanRemote {
     boolean deleteOrder(Long id);
     List<Order1> getAllOrders();
     Order1 findOrderById(Long id);
+    List<OrderDetail> getOrderDetailById(Long id);
     
     //IO Warehouse Management
     IoWarehouse insertIoWarehouse(Store store, User staff, List<IoDetail> wareList, Boolean import1);
@@ -75,4 +76,6 @@ public interface MobileStoreSystemBeanRemote {
     boolean deleteIoWarehouse(Long id);
     List<IoWarehouse> getAllIoWarehouses();
     IoWarehouse findIoWarehouselById(Long id);
+    List<IoWarehouse> getIoWarehousesByStore(Store store);
+    List<IoDetail> getIoDetailById(Long id);
 }

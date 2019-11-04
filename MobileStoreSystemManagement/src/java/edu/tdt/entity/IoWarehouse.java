@@ -151,7 +151,11 @@ public class IoWarehouse implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.tdt.entity.IoWarehouse[ id=" + id + " ]";
+        if(this.import1) {
+            return String.format("%3s %2s %17s %3s %12s %3s %10s %3s %5s %5s %8s", this.id, "|", this.storeId.getName().replaceAll("\\s\\s", ""), "|", this.staffId.getUserName().replaceAll("\\s\\s", ""), "|", this.createdAt, "|", this.total, "|", "Import");
+        } else {
+            return String.format("%3s %2s %17s %3s %12s %3s %10s %3s %5s %5s %8s", this.id, "|", this.storeId.getName().replaceAll("\\s\\s", ""), "|", this.staffId.getUserName().replaceAll("\\s\\s", ""), "|", this.createdAt, "|", this.total, "|", "Export");
+        }
     }
     
 }
