@@ -34,6 +34,7 @@ chỉnh sửa lại username và password để truy cập vào postgresql.
 Sau khi hoàn tất, ta tải project lên jboss admin.
 # Chạy chương trình.
 Ta chạy project MobileStoreManagementApp. Khi chạy chương trình ta cần đăng nhập vào hệ thống.
+![giao diện chính](https://github.com/dinhthuan182/PTHTTTDN/blob/master/main-interface.png)
 Sau khi đăng nhập ta có thể thao tác với hệ thống:
 1. Quản lý cửa hàng (Thêm, sửa, xóa, hiển thị cửa hàng)
 2. Quản lý nhân viên (Thêm, sửa, xóa, hiển thị, phân quyền nhân viên)
