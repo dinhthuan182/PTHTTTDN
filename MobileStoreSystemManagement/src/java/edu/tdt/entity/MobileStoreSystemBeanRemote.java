@@ -69,6 +69,7 @@ public interface MobileStoreSystemBeanRemote {
     List<Order1> getAllOrders();
     Order1 findOrderById(Long id);
     List<OrderDetail> getOrderDetailById(Long id);
+    List<Order1> getOrderByStore(Store store);
     
     //IO Warehouse Management
     IoWarehouse insertIoWarehouse(Store store, User staff, List<IoDetail> wareList, Boolean import1);

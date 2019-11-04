@@ -622,6 +622,12 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
     }
     
     @Override
+    public List<Order1> getOrderByStore(Store store) {
+        Query selectQuery = em.createQuery("SELECT o FROM Order1 o WHERE o.storeId = :store").setParameter("store", store);
+        return selectQuery.getResultList();
+    }
+    
+    @Override
     public List<OrderDetail> getOrderDetailById(Long id) {
         Order1 order = this.findOrderById(id);
         return em.createNamedQuery("OrderDetail.findByOrderId").setParameter("orderId", order.getId()).getResultList();

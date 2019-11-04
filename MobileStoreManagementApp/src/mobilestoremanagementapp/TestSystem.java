@@ -127,7 +127,7 @@ public class TestSystem {
         System.out.println("\n==================================");
         System.out.println("Mobile Order Management");
         System.out.println("----------------------------------");
-        System.out.print("Options: \n1. List Order \n2. Add Order \n3. Edit Order \n4. Remove Order \n5. Order Detail \n6. Exit \nEnter Choice: ");
+        System.out.print("Options: \n1. List Order \n2. Add Order \n3. Edit Order \n4. Remove Order \n5. Order Detail \n6. Invoice Statistics \n7 Exit \nEnter Choice: ");
     }
     
     private void showIOWarehouseMenuGUI()
@@ -470,7 +470,48 @@ public class TestSystem {
             e.getMessage();
         }
     }
-    
+    private void getInvoiceStatisticsByStore(Long id) {
+        try {
+            MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
+            Store store = libBean2.findStoreById(id);
+            if(store == null) {
+                System.out.println("The store is not exist in the system.");
+                return;
+            }
+            List<Order1> orderList = libBean2.getOrderByStore(store);
+            if(orderList == null) {
+                System.out.println("The store has not any order.");
+                return;
+            }
+            List<OrderDetail> detailList = new ArrayList();
+            boolean exist;
+            for(Order1 o : orderList) {
+                for(OrderDetail od1 : libBean2.getOrderDetailById(o.getId())) {
+                    exist = false;
+                    for(OrderDetail od2 : detailList) {
+                        if(od2.getProduct().getId() == od1.getProduct().getId()) {
+                            //Sum quantity of product if exist in list
+                            od2.setQuantity(od2.getQuantity() + od1.getQuantity());
+                            exist = true;
+                        }
+                    }
+                    if(!exist) {
+                        //Add new product if not exist
+                        detailList.add(od1);
+                    }
+                }
+            }
+            
+            System.out.println("Product list : ");
+            System.out.println(String.format("%3s %2s %8s %20s %8s %7s %5s", "STT", "|", "Product", "|", "Price", "|", "Quantity"));
+            System.out.println(String.format("%s", "------------------------------------------------------------------"));
+            for(int y = 0; y < detailList.size(); y++) {
+                System.out.println(String.format("%3s %2s %25s %3s %8s %7s %5s", (y+1), "|", detailList.get(y).getProduct().getName().replaceAll("\\s\\s", ""), "|", detailList.get(y).getPrice(), "|", detailList.get(y).getQuantity()));
+            }
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
     private void getInventoryByStore(Long id) {
         try {
             MobileStoreSystemBeanRemote libBean2 = (MobileStoreSystemBeanRemote) ctx.lookup(getJNDI());
@@ -482,7 +523,7 @@ public class TestSystem {
             //List input/output warehouse
             List<IoWarehouse> wareList = libBean2.getIoWarehousesByStore(store);
             if(wareList == null) {
-                System.out.println("The store is empty io warehouse.");
+                System.out.println("The store has not io warehouse.");
                 return;
             }
             List<IoDetail> inventory = new ArrayList();
@@ -504,7 +545,6 @@ public class TestSystem {
                     if(!exist) {
                         //Add new product if not exist
                         inventory.add(d1);
-                        exist = false;
                     }
                 }
             }
@@ -1274,10 +1314,17 @@ public class TestSystem {
                                     ViewOrderDetail(order_id);
                                     System.out.println("----------------------------------");
                                     break;
+                                    
+                                case 6:
+                                    System.out.print("Enter store id : ");
+                                    order_id = Long.parseLong(sc.nextLine());
+                                    getInvoiceStatisticsByStore(order_id);
+                                    System.out.println("----------------------------------");
+                                    break;
                                 default:
                                     break;
                             }
-                        } while(orderChoice != 6);
+                        } while(orderChoice != 7);
                         break;
                         
                     case 7: //IO Warehouse Management
