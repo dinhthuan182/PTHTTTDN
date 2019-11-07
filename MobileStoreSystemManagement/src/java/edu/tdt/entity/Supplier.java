@@ -150,7 +150,7 @@ public class Supplier implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%3s %2s %14s %6s %20s %5s %6s %1s %20s %5s %5s", this.id, "|", this.name.replaceAll("\\s\\s", ""), "|", this.address.replaceAll("\\s\\s", ""), "|", this.phone, "|", this.email.replaceAll("\\s\\s", ""), "|", this.productCollection.size());
+        return String.format("%3s %2s %15s %2s %25s %2s %6s %1s %20s %2s %4s", this.id, "|", this.name.replaceAll("\\s\\s", ""), "|", this.address.replaceAll("\\s\\s", ""), "|", this.phone, "|", this.email.replaceAll("\\s\\s", ""), "|", this.productCollection.size());
     }
     
 }

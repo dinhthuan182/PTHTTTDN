@@ -224,7 +224,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%3s %2s %10s %5s %17s %5s %13s %5s %5s %1s %20s %5s %5s", this.id, "|", this.userName.replaceAll("\\s\\s", ""), "|", this.fullName.replaceAll("\\s\\s", ""), "|", this.address.replaceAll("\\s\\s", ""), "|", this.phone, "|", this.email.replaceAll("\\s\\s", ""), "|", this.storeId.getName().replaceAll("\\s\\s", ""));
+        return String.format("%3s %2s %13s %2s %20s %2s %25s %2s %10s %1s %20s %2s %2s", this.id, "|", this.userName.replaceAll("\\s\\s", ""), "|", this.fullName.replaceAll("\\s\\s", ""), "|", this.address.replaceAll("\\s\\s", ""), "|", this.phone, "|", this.email.replaceAll("\\s\\s", ""), "|", this.storeId.getName().replaceAll("\\s\\s", ""));
     }
     
 }

@@ -260,7 +260,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%3s %2s %25s %2s %10s %2s %19s %2s %8s %2s %10s %2s %30s %2s %20s %2s %15s %2s %5s", this.id, "|", this.name.replaceAll("\\s\\s", ""), "|", this.supplierId.getName().replaceAll("\\s\\s", ""), "|", this.operator.replaceAll("\\s\\s", ""), "|", this.memory +" GB", "|", this.color.replaceAll("\\s\\s", ""), "|", this.screen.replaceAll("\\s\\s", ""), "|", this.afterCamera + " MP - " + this.beforeCamera +" MP", "|", this.pin.replaceAll("\\s\\s", ""), "|", this.price);
+        return String.format("%3s %2s %30s %2s %10s %2s %19s %2s %8s %2s %20s %2s %30s %2s %20s %2s %35s %2s %2s", this.id, "|", this.name.replaceAll("\\s\\s", ""), "|", this.supplierId.getName().replaceAll("\\s\\s", ""), "|", this.operator.replaceAll("\\s\\s", ""), "|", this.memory +" GB", "|", this.color.replaceAll("\\s\\s", ""), "|", this.screen.replaceAll("\\s\\s", ""), "|", this.afterCamera + " MP - " + this.beforeCamera +" MP", "|", this.pin.replaceAll("\\s\\s", ""), "|", this.price);
     }
     
 }

@@ -50,18 +50,28 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
     }
 
     @Override
-    public void insertRole(String roleName) {
-        Role role = new Role(roleName);
-        em.persist(role);
+    public boolean insertRole(String roleName) {
+        try {
+            Role role = new Role(roleName);
+            em.persist(role);
+            return true;
+        }catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
-    public void insertUserRole(Long user_id, String roleName) {
-        User user = em.find(User.class, user_id);
-        Role role = em.find(Role.class, roleName);
+    public boolean insertUserRole(Long user_id, String roleName) {
+        try {
+            User user = em.find(User.class, user_id);
+            Role role = em.find(Role.class, roleName);
 
-        user.getRoleCollection().add(role);
-        role.getUserCollection().add(user);
+            user.getRoleCollection().add(role);
+            role.getUserCollection().add(user);
+            return true;
+        }catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -81,7 +91,11 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public List<User> getAllUsers() {
-        return em.createNamedQuery("User.findAll").getResultList();
+        try {
+            return em.createNamedQuery("User.findAll").getResultList();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -92,6 +106,7 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
             store.setAddress(address);
             store.setPhone(phone);
             store.setEmail(email);
+            store.setStatus(Boolean.TRUE);
             em.persist(store);
             return (Store) em.createNamedQuery("Store.findByName").setParameter("name", name).getSingleResult();
         }catch (Exception e) {
@@ -138,12 +153,20 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public List<Store> getAllStores() {
-        return em.createNamedQuery("Store.findAll").getResultList();
+        try {
+            return em.createNamedQuery("Store.findAll").getResultList();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Store findStoreById(Long id) {
-        return (Store) em.createNamedQuery("Store.findById").setParameter("id", id).getSingleResult();
+        try {
+            return (Store) em.createNamedQuery("Store.findById").setParameter("id", id).getSingleResult();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -187,23 +210,34 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public List<Role> getAllRoles() {
-        return em.createNamedQuery("Role.findAll").getResultList();
+        try {
+            return em.createNamedQuery("Role.findAll").getResultList();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<User> getUsersByRole(String roleName) {
-        Role role = (Role) em.createNamedQuery("Role.findByRoleName").setParameter("roleName", roleName.toUpperCase()).getSingleResult();
-        if(role != null)
-        {
+        try {
             ArrayList<User> arrOutput = new ArrayList<User>();
-            arrOutput.addAll(role.getUserCollection());
+            Role role = (Role) em.createNamedQuery("Role.findByRoleName").setParameter("roleName", roleName.toUpperCase()).getSingleResult();
+            if(role != null && !(role.getUserCollection().isEmpty()))
+            {
+                arrOutput.addAll(role.getUserCollection());
+            }
             return arrOutput;
+        } catch (Exception e) {
+            return null;
         }
-        return null;
     }
 
     private Role findRole(String roleName) {
-        return (Role) em.createNamedQuery("Role.findByRoleName").setParameter("roleName", roleName).getSingleResult();
+        try {
+            return (Role) em.createNamedQuery("Role.findByRoleName").setParameter("roleName", roleName).getSingleResult();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -262,9 +296,9 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public boolean updateProduct(Long id, String name, Long supplierID, Integer afterCamera, Integer beforeCamera, String color, String description, Integer memory, String operator, Integer price, Integer warranty, String screen, String pin, Boolean status) {
-        Product product = em.find(Product.class, id);
         try
         {
+            Product product = em.find(Product.class, id);
             Query updateQuery = em.createQuery("UPDATE Product AS p SET p.name = :name, p.supplierId = :supplier, p.afterCamera = :afterCamera, p.beforeCamera = :beforeCamera, p.color = :color, p.description = :description ,p.memory = :memory ,p.operator = :operator ,p.price = :price , p.warranty = :warranty, p.screen = :screen , p.pin = :pin, p.status = :status WHERE p.id = :id");
             if(name.equals(null) || name.equals("")) {
                 updateQuery.setParameter("name", product.getName());
@@ -369,12 +403,20 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public List<Product> getAllProducts() {
-        return em.createNamedQuery("Product.findAll").getResultList();
+        try {
+            return em.createNamedQuery("Product.findAll").getResultList();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Product findProductById(Long id) {
-        return (Product) em.createNamedQuery("Product.findById").setParameter("id", id).getSingleResult();
+        try {
+            return (Product) em.createNamedQuery("Product.findById").setParameter("id", id).getSingleResult();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -395,9 +437,9 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public boolean updateSupplier(Long id, String fullname, String address, String phone, String email, Boolean status) {
-        Supplier supplier = em.find(Supplier.class, id);
         try
         {
+            Supplier supplier = em.find(Supplier.class, id);
             Query updateQuery = em.createQuery("UPDATE Supplier AS s SET s.name = :name, s.address = :address, s.phone = :phone, s.email = :email ,s.status = :status  WHERE s.id = :id");
             updateQuery.setParameter("name", fullname);
             updateQuery.setParameter("address", address);
@@ -428,12 +470,20 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public List<Supplier> getAllSuppliers() {
-        return em.createNamedQuery("Supplier.findAll").getResultList();
+        try {
+            return em.createNamedQuery("Supplier.findAll").getResultList();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Supplier findSupplierById(Long id) {
-        return (Supplier) em.createNamedQuery("Supplier.findById").setParameter("id", id).getSingleResult();
+        try {
+            return (Supplier) em.createNamedQuery("Supplier.findById").setParameter("id", id).getSingleResult();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -453,9 +503,9 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public boolean updateCustomer(Long id, String fullname, String address, String phone, String email) {
-        Customer customer = em.find(Customer.class, id);
         try
         {
+            Customer customer = em.find(Customer.class, id);
             Query updateQuery = em.createQuery("UPDATE Customer AS c SET c.fullname = :fullname, c.address = :address, c.phone = :phone, c.email = :email  WHERE c.id = :id");
             updateQuery.setParameter("fullname", fullname);
             updateQuery.setParameter("address", address);
@@ -485,17 +535,26 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public List<Customer> getAllCustomers() {
-        return em.createNamedQuery("Customer.findAll").getResultList();
+        try {
+            return em.createNamedQuery("Customer.findAll").getResultList();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Customer findCustomerById(Long id) {
-        return (Customer) em.createNamedQuery("Customer.findById").setParameter("id", id).getSingleResult();
+        try {
+            return (Customer) em.createNamedQuery("Customer.findById").setParameter("id", id).getSingleResult();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Order1 insertOrder(String customerName, String customerAddress, String customerPhone, String customerEmail, Store store, User staff, List<OrderDetail> productList, String note) {
         try {
+            List<IoDetail> wareList = new ArrayList();
             int total = 0;
             Customer customer = findCustomerByPhone(customerPhone);
             if(customer == null) {
@@ -517,7 +576,13 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
             for(OrderDetail detail :productList ) {
                 this.insertOrderDetail(order, detail.getProduct(), detail.getPrice(), detail.getQuantity());
+                IoDetail i = new IoDetail();
+                i.setProduct(detail.getProduct());
+                i.setPrice(detail.getPrice());
+                i.setQuantity(detail.getQuantity());
+                wareList.add(i);
             }
+            this.insertIoWarehouse(store, staff, wareList, Boolean.FALSE);
 
             return order;
         } catch (Exception e) {
@@ -587,50 +652,82 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
         }  
     }
     
-    public void insertOrderDetail(Order1 order, Product product, int price, int quantity) {
-        OrderDetail oDetail = new OrderDetail();
-        oDetail.setOrder1(order);
-        oDetail.setProduct(product);
-        oDetail.setOrderDetailPK(new OrderDetailPK(order.getId(), product.getId()));
-        oDetail.setPrice(price);
-        oDetail.setQuantity(quantity);
-        em.persist(oDetail);
+    public boolean insertOrderDetail(Order1 order, Product product, int price, int quantity) {
+        try {
+            OrderDetail oDetail = new OrderDetail();
+            oDetail.setOrder1(order);
+            oDetail.setProduct(product);
+            oDetail.setOrderDetailPK(new OrderDetailPK(order.getId(), product.getId()));
+            oDetail.setPrice(price);
+            oDetail.setQuantity(quantity);
+            em.persist(oDetail);
+            return true;
+        }catch(Exception e) {
+            return false;
+        }
     }
     
-    public void updateOrderDetail(Order1 order, Product product, int price, int quantity) {
-        Query updateQuery = em.createQuery("UPDATE OrderDetail AS od SET od.price = :price, od.quantity = :quantity  WHERE od.order1.id = :order AND od.product.id = :product");
-        updateQuery.setParameter("price", price);
-        updateQuery.setParameter("quantity", quantity);
-        updateQuery.setParameter("order", order.getId());
-        updateQuery.setParameter("product", product.getId());
-        updateQuery.executeUpdate();
+    public boolean updateOrderDetail(Order1 order, Product product, int price, int quantity) {
+        try {
+            Query updateQuery = em.createQuery("UPDATE OrderDetail AS od SET od.price = :price, od.quantity = :quantity  WHERE od.order1.id = :order AND od.product.id = :product");
+            updateQuery.setParameter("price", price);
+            updateQuery.setParameter("quantity", quantity);
+            updateQuery.setParameter("order", order.getId());
+            updateQuery.setParameter("product", product.getId());
+            updateQuery.executeUpdate();
+            return true;
+        }catch(Exception e) {
+            return false;
+        }
     }
     
-    public void deleteOrderDetail(Order1 order) {
-        Query deleteDetailQuery = em.createQuery("DELETE FROM OrderDetail od WHERE od.order1.id = :order");
-        deleteDetailQuery.setParameter("order", order.getId()).executeUpdate();
+    public boolean deleteOrderDetail(Order1 order) {
+        
+        try {
+            Query deleteDetailQuery = em.createQuery("DELETE FROM OrderDetail od WHERE od.order1.id = :order");
+            deleteDetailQuery.setParameter("order", order.getId()).executeUpdate();
+            return true;
+        }catch(Exception e) {
+            return false;
+        }
     }
 
     @Override
     public List<Order1> getAllOrders() {
-        return em.createNamedQuery("Order1.findAll").getResultList();
+        try {
+            return em.createNamedQuery("Order1.findAll").getResultList();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Order1 findOrderById(Long id) {
-        return (Order1) em.createNamedQuery("Order1.findById").setParameter("id", id).getSingleResult();
+        try {
+            return (Order1) em.createNamedQuery("Order1.findById").setParameter("id", id).getSingleResult();
+        }catch (Exception e) {
+            return null;
+        }
     }
     
     @Override
     public List<Order1> getOrderByStore(Store store) {
-        Query selectQuery = em.createQuery("SELECT o FROM Order1 o WHERE o.storeId = :store").setParameter("store", store);
-        return selectQuery.getResultList();
+        try {
+            Query selectQuery = em.createQuery("SELECT o FROM Order1 o WHERE o.storeId = :store").setParameter("store", store);
+            return selectQuery.getResultList();
+        }catch (Exception e) {
+            return null;
+        }
     }
     
     @Override
     public List<OrderDetail> getOrderDetailById(Long id) {
-        Order1 order = this.findOrderById(id);
-        return em.createNamedQuery("OrderDetail.findByOrderId").setParameter("orderId", order.getId()).getResultList();
+        try {
+            Order1 order = this.findOrderById(id);
+            return em.createNamedQuery("OrderDetail.findByOrderId").setParameter("orderId", order.getId()).getResultList();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -686,7 +783,6 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
                     set = false;
                 }
             }
-
             return true;
         } catch (Exception e) {
             return false;
@@ -707,38 +803,61 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
             return false;
         } 
     }
-    public void insertIoDetail(IoWarehouse warehouse, Product product, int price, int quantity) {
-        IoDetail io = new IoDetail();
-        io.setIoDetailPK(new IoDetailPK(warehouse.getId(), product.getId()));
-        io.setIoWarehouse(warehouse);
-        io.setProduct(product);
-        io.setPrice(price);
-        io.setQuantity(quantity);
-        em.persist(io);
+    public boolean insertIoDetail(IoWarehouse warehouse, Product product, int price, int quantity) {
+        try {
+                IoDetail io = new IoDetail();
+            io.setIoDetailPK(new IoDetailPK(warehouse.getId(), product.getId()));
+            io.setIoWarehouse(warehouse);
+            io.setProduct(product);
+            io.setPrice(price);
+            io.setQuantity(quantity);
+            em.persist(io);
+            return true;
+        }catch (Exception e) {
+            return false;
+        }
     }
     
-    public void updateIoDetail(IoWarehouse warehouse, Product product, int price, int quantity) {
-        Query updateQuery = em.createQuery("UPDATE IoDetail AS io SET io.price = :price, io.quantity = :quantity  WHERE io.ioWarehouse.id = :warehouse AND io.product.id = :product");
-        updateQuery.setParameter("price", price);
-        updateQuery.setParameter("quantity", quantity);
-        updateQuery.setParameter("warehouse", warehouse.getId());
-        updateQuery.setParameter("product", product.getId());
-        updateQuery.executeUpdate();
+    public boolean updateIoDetail(IoWarehouse warehouse, Product product, int price, int quantity) {
+        try {
+            Query updateQuery = em.createQuery("UPDATE IoDetail AS io SET io.price = :price, io.quantity = :quantity  WHERE io.ioWarehouse.id = :warehouse AND io.product.id = :product");
+            updateQuery.setParameter("price", price);
+            updateQuery.setParameter("quantity", quantity);
+            updateQuery.setParameter("warehouse", warehouse.getId());
+            updateQuery.setParameter("product", product.getId());
+            updateQuery.executeUpdate();
+            return true;
+        }catch (Exception e) {
+            return false;
+        }
     }
     
-    public void deleteIoDetail(IoWarehouse warehouse) {
-        Query deleteDetailQuery = em.createQuery("DELETE FROM IoDetail io WHERE io.ioWarehouse.id = :ware");
-        deleteDetailQuery.setParameter("ware", warehouse.getId()).executeUpdate();
+    public boolean deleteIoDetail(IoWarehouse warehouse) {
+        try {
+            Query deleteDetailQuery = em.createQuery("DELETE FROM IoDetail io WHERE io.ioWarehouse.id = :ware");
+            deleteDetailQuery.setParameter("ware", warehouse.getId()).executeUpdate();
+            return true;
+        }catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public List<IoWarehouse> getAllIoWarehouses() {
-        return em.createNamedQuery("IoWarehouse.findAll").getResultList();
+        try {
+            return em.createNamedQuery("IoWarehouse.findAll").getResultList();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public IoWarehouse findIoWarehouselById(Long id) {
-        return (IoWarehouse) em.createNamedQuery("IoWarehouse.findById").setParameter("id", id).getSingleResult();
+        try {
+            return (IoWarehouse) em.createNamedQuery("IoWarehouse.findById").setParameter("id", id).getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -752,14 +871,22 @@ public class MobileStoreSystemBean implements MobileStoreSystemBeanRemote {
 
     @Override
     public List<IoWarehouse> getIoWarehousesByStore(Store store) {
-        Query selectQuery = em.createQuery("SELECT iw FROM IoWarehouse iw WHERE iw.storeId = :store").setParameter("store", store);
-        return selectQuery.getResultList();
+        try {
+            Query selectQuery = em.createQuery("SELECT iw FROM IoWarehouse iw WHERE iw.storeId = :store").setParameter("store", store);
+            return selectQuery.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<IoDetail> getIoDetailById(Long id) {
-        IoWarehouse ware = (IoWarehouse) em.createNamedQuery("IoWarehouse.findById").setParameter("id", id).getSingleResult();
-        return em.createNamedQuery("IoDetail.findByWarehouseId").setParameter("warehouseId", ware.getId()).getResultList();       
+        try {
+            IoWarehouse ware = (IoWarehouse) em.createNamedQuery("IoWarehouse.findById").setParameter("id", id).getSingleResult();
+            return em.createNamedQuery("IoDetail.findByWarehouseId").setParameter("warehouseId", ware.getId()).getResultList();   
+        } catch (Exception e) {
+            return null;
+        }   
     }
 
 }

@@ -8,7 +8,6 @@ package mobilestoremanagementapp;
 import edu.tdt.entity.*;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -155,8 +154,8 @@ public class TestSystem {
 
         System.out.println("==================================");
         System.out.println("------------List Store------------");
-        System.out.println(String.format("%3s %2s %8s %12s %10s %15s %8s %8s %8s %17s %10s", "ID", "|", "Name", "|", "Address", "|", "Phone", "|","email", "|", "Employee"));
-        System.out.println(String.format("%s", "------------------------------------------------------------------------------------------------------------------"));
+        System.out.println(String.format("%3s %2s %20s %12s %17s %10s %8s %8s %19s %11s %6s", "ID", "|", "Name", "|", "Address", "|", "Phone", "|","email", "|", "Employee"));
+        System.out.println(String.format("%s", "------------------------------------------------------------------------------------------------------------------------------------"));
         for (Store s : storesList)
         {
             System.out.println(s.toString());
@@ -186,11 +185,11 @@ public class TestSystem {
 
         System.out.println("==================================");
         System.out.println("------------List User-------------");
-        System.out.println(String.format("%3s %2s %10s %5s %10s %12s %8s %10s %8s %8s %10s %15s %10s", "ID", "|", "Username", "|", "Fullname", "|", "Address", "|", "Phone", "|","email", "|", "Store"));
-        System.out.println(String.format("%s", "--------------------------------------------------------------------------------------------------------------------------------------"));
+        System.out.println(String.format("%3s %2s %10s %5s %14s %8s %17s %10s %8s %8s %12s %10s %10s", "ID", "|", "Username", "|", "Fullname", "|", "Address", "|", "Phone", "|","email", "|", "Store"));
+        System.out.println(String.format("%s", "------------------------------------------------------------------------------------------------------------------------------------------------------"));
         for (User u : usersList)
         {
-            System.out.println(String.format("%3s %2s %10s %5s %17s %5s %13s %5s %5s %1s %20s %5s %5s", u.getId(), "|", u.getUserName().replaceAll("\\s\\s", ""), "|", u.getFullName().replaceAll("\\s\\s", ""), "|", u.getAddress().replaceAll("\\s\\s", ""), "|", u.getPhone(), "|", u.getEmail().replaceAll("\\s\\s", ""), "|", u.getStoreId().getName()));
+            System.out.println(u.toString());
         }
         System.out.println();
 
@@ -217,10 +216,11 @@ public class TestSystem {
 
         System.out.println("==================================");
         System.out.println("------------List Role-------------");
-        System.out.println("STT\tRole name\tEmployee");
+        System.out.println(String.format("%3s %2s %10s %2s %5s", "STT", "|", "Role name", "|", "Employee"));
+        System.out.println("-------------------------------");
         for (int i = 0; i < rolesList.size(); i++)
         {
-            System.out.println(i+"\t"+rolesList.get(i).getRoleName().replaceAll("\\s\\s", "")+"\t\t"+ rolesList.get(i).getUserCollection().size());
+            System.out.println(String.format("%3s %2s %10s %2s %5s", i, "|", rolesList.get(i).getRoleName().replaceAll("\\s\\s", ""), "|", rolesList.get(i).getUserCollection().size()));
         }
         System.out.println();
 
@@ -244,9 +244,9 @@ public class TestSystem {
             }
 
             System.out.println("==================================");
-            System.out.println("----------List "+ role +" Role---------");
-            System.out.println(String.format("%3s %2s %10s %5s %10s %12s %8s %10s %8s %8s %10s %15s %10s", "ID", "|", "Username", "|", "Fullname", "|", "Address", "|", "Phone", "|","email", "|", "Store"));
-            System.out.println(String.format("%s", "--------------------------------------------------------------------------------------------------------------------------------------"));
+            System.out.println("----------List "+ role.replaceAll("\\s\\s", "") +" Role---------");
+            System.out.println(String.format("%3s %2s %10s %5s %10s %12s %13s %14s %8s %8s %8s %14s %10s", "ID", "|", "Username", "|", "Fullname", "|", "Address", "|", "Phone", "|","email", "|", "Store"));
+            System.out.println(String.format("%s", "------------------------------------------------------------------------------------------------------------------------------------------------------"));
             for (int i = 0; i < usersList.size(); i++)
             {
                 System.out.println(usersList.get(i).toString());
@@ -274,7 +274,7 @@ public class TestSystem {
             }
 
             System.out.println("==================================");
-            System.out.println("----------List Role of "+ user.getUserName() +"-----------");
+            System.out.println("--------List Role of "+ user.getUserName().replaceAll("\\s\\s", "") +"---------");
             for (int i = 0; i < rolesList.size(); i++)
             {
                 System.out.println((i+1)+"\t"+rolesList.get(i).getRoleName());
@@ -304,8 +304,8 @@ public class TestSystem {
 
             System.out.println("==================================");
             System.out.println("-----------List Product-----------");
-            System.out.println(String.format("%3s %2s %10s %17s %10s %2s %11s %10s %8s %2s %10s %2s %12s %20s %4s %2s %10s %14s %5s", "ID", "|", "Name", "|", "Supplier", "|", "Operator", "|", "Memory", "|", "Color", "|","Screen", "|", "Camera(After-Before)", "|", "Pin", "|", "Price($)"));
-            System.out.println(String.format("%s", "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"));
+            System.out.println(String.format("%3s %2s %17s %15s %10s %2s %11s %10s %8s %2s %10s %12s %12s %20s %4s %2s %18s %19s %5s", "ID", "|", "Name", "|", "Supplier", "|", "Operator", "|", "Memory", "|", "Color", "|","Screen", "|", "Camera(After-Before)", "|", "Pin", "|", "Price($)"));
+            System.out.println(String.format("%s", "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"));
             for (Product p : productsList)
             {
                 System.out.println(p.toString());
@@ -334,8 +334,8 @@ public class TestSystem {
 
         System.out.println("==================================");
         System.out.println("-----------List Supplier------------");
-        System.out.println(String.format("%3s %2s %8s %12s %10s %15s %8s %8s %8s %17s %6s", "ID", "|", "Name", "|", "Address", "|", "Phone", "|","email", "|", "Product"));
-        System.out.println(String.format("%s", "---------------------------------------------------------------------------------------------------------------"));
+        System.out.println(String.format("%3s %2s %10s %7s %17s %10s %8s %8s %13s %9s %6s", "ID", "|", "Name", "|", "Address", "|", "Phone", "|","email", "|", "Product"));
+        System.out.println(String.format("%s", "--------------------------------------------------------------------------------------------------------------"));
         for (Supplier s : suppliersList)
         {
             System.out.println(s.toString());
@@ -365,7 +365,7 @@ public class TestSystem {
 
         System.out.println("==================================");
         System.out.println("----------List Customer-----------");
-        System.out.println(String.format("%3s %2s %8s %12s %10s %15s %8s %8s %8s %17s %8s", "ID", "|", "Fullname", "|", "Address", "|", "Phone", "|","email", "|", "Order"));
+        System.out.println(String.format("%3s %2s %12s %8s %14s %11s %9s %7s %12s %13s %6s", "ID", "|", "Fullname", "|", "Address", "|", "Phone", "|","email", "|", "Order"));
         System.out.println(String.format("%s", "----------------------------------------------------------------------------------------------------------------"));
         for (Customer c : customersList)
         {
@@ -396,8 +396,8 @@ public class TestSystem {
 
         System.out.println("==================================");
         System.out.println("-----------List Order-------------");
-        System.out.println(String.format("%3s %2s %8s %12s %8s %9s %7s %6s %8s %2s %8s", "ID", "|", "Cutomer", "|", "Store", "|", "Staff", "|","Total($)", "|", "Date"));
-        System.out.println(String.format("%s", "------------------------------------------------------------------------------------------"));
+        System.out.println(String.format("%3s %2s %12s %10s %14s %18s %10s %7s %8s %2s %5s", "ID", "|", "Cutomer", "|", "Store", "|", "Staff", "|","Total($)", "|", "Date"));
+        System.out.println(String.format("%s", "-----------------------------------------------------------------------------------------------------------"));
         for (Order1 o : ordersList)
         {
             System.out.println(o.toString());
@@ -427,8 +427,8 @@ public class TestSystem {
 
         System.out.println("==================================");
         System.out.println("--------List IO Warehouse---------");
-        System.out.println(String.format("%3s %2s %8s %12s %8s %7s %7s %6s %8s %2s %8s", "ID", "|", "Store", "|", "Staff", "|", "Date", "|","Total($)", "|", "Status"));
-        System.out.println(String.format("%s", "-------------------------------------------------------------------------------------"));
+        System.out.println(String.format("%3s %2s %12s %20s %7s %7s %6s %6s %8s %2s %8s", "ID", "|", "Store", "|", "Staff", "|", "Date", "|","Total($)", "|", "Status"));
+        System.out.println(String.format("%s", "----------------------------------------------------------------------------------------------"));
         for (IoWarehouse i : warehousesList)
         {
             System.out.println(i.toString());
@@ -459,12 +459,12 @@ public class TestSystem {
             System.out.println("Date : "+ order.getCreatedAt());
             System.out.println("Product list : ");
             List<OrderDetail> oderList = libBean2.getOrderDetailById(order.getId());
-            System.out.println(String.format("%3s %2s %8s %20s %6s %3s %5s %2s %5s", "STT", "|", "Product", "|", "Price", "|", "Quantity", "|", "Sum"));
-            System.out.println(String.format("%s", "---------------------------------------------------------------------------"));
+            System.out.println(String.format("%3s %2s %10s %17s %6s %2s %5s %2s %5s", "STT", "|", "Product", "|", "Price($)", "|", "Quantity", "|", "Sum($)"));
+            System.out.println(String.format("%s", "---------------------------------------------------------------------"));
             for(int y = 0; y < oderList.size(); y++) {
-                System.out.println(String.format("%3s %2s %25s %3s %6s %3s %5s %5s %5s", (y+1), "|", oderList.get(y).getProduct().getName().replaceAll("\\s\\s", ""), "|", oderList.get(y).getPrice(), "|", oderList.get(y).getQuantity(), "|", (oderList.get(y).getPrice() * oderList.get(y).getQuantity())));
+                System.out.println(String.format("%3s %2s %25s %2s %6s %4s %5s %5s %5s", (y+1), "|", oderList.get(y).getProduct().getName().replaceAll("\\s\\s", ""), "|", oderList.get(y).getPrice(), "|", oderList.get(y).getQuantity(), "|", (oderList.get(y).getPrice() * oderList.get(y).getQuantity())));
             }
-            System.out.println("Total : "+ order.getTotal());
+            System.out.println("Total($) : "+ order.getTotal());
             System.out.println("Note : "+ order.getNote());
         }catch (Exception e) {
             e.getMessage();
@@ -484,6 +484,7 @@ public class TestSystem {
                 return;
             }
             List<OrderDetail> detailList = new ArrayList();
+            int sum, total =0;
             boolean exist;
             for(Order1 o : orderList) {
                 for(OrderDetail od1 : libBean2.getOrderDetailById(o.getId())) {
@@ -501,13 +502,16 @@ public class TestSystem {
                     }
                 }
             }
-            
+            System.out.println("Store : " + store.toString());
             System.out.println("Product list : ");
-            System.out.println(String.format("%3s %2s %8s %20s %8s %7s %5s", "STT", "|", "Product", "|", "Price", "|", "Quantity"));
-            System.out.println(String.format("%s", "------------------------------------------------------------------"));
+            System.out.println(String.format("%3s %2s %11s %16s %5s %3s %5s %2s %3s", "STT", "|", "Product", "|", "Price($)", "|", "Quantity", "|", "Sum($)"));
+            System.out.println(String.format("%s", "-------------------------------------------------------------------"));
             for(int y = 0; y < detailList.size(); y++) {
-                System.out.println(String.format("%3s %2s %25s %3s %8s %7s %5s", (y+1), "|", detailList.get(y).getProduct().getName().replaceAll("\\s\\s", ""), "|", detailList.get(y).getPrice(), "|", detailList.get(y).getQuantity()));
+                sum = detailList.get(y).getQuantity() * detailList.get(y).getPrice();
+                total += sum;
+                System.out.println(String.format("%3s %2s %25s %2s %6s %2s %5s %5s %2s", (y+1), "|", detailList.get(y).getProduct().getName().replaceAll("\\s\\s", ""), "|", detailList.get(y).getPrice(), "|", detailList.get(y).getQuantity(), "|", sum));
             }
+            System.out.println("Total($) : " +total);
         } catch (Exception e) {
             e.getMessage();
         }
@@ -527,6 +531,7 @@ public class TestSystem {
                 return;
             }
             List<IoDetail> inventory = new ArrayList();
+            int sum, total=0;
             boolean exist;
             for(IoWarehouse iw : wareList) {
                 for(IoDetail d1 : libBean2.getIoDetailById(iw.getId())) {
@@ -548,13 +553,16 @@ public class TestSystem {
                     }
                 }
             }
+            System.out.println("Store : " + store.toString());
             System.out.println("Product list : ");
-            System.out.println(String.format("%3s %2s %8s %20s %8s %7s %5s", "STT", "|", "Product", "|", "Price", "|", "Quantity"));
-            System.out.println(String.format("%s", "------------------------------------------------------------------"));
+            System.out.println(String.format("%3s %2s %12s %15s %8s %2s %8s %2s %5s", "STT", "|", "Product", "|", "Price($)", "|", "Quantity", "|", "Sum($)"));
+            System.out.println(String.format("%s", "--------------------------------------------------------------------"));
             for(int y = 0; y < inventory.size(); y++) {
-                System.out.println(String.format("%3s %2s %25s %3s %8s %7s %5s", (y+1), "|", inventory.get(y).getProduct().getName().replaceAll("\\s\\s", ""), "|", inventory.get(y).getPrice(), "|", inventory.get(y).getQuantity()));
+                sum = inventory.get(y).getPrice() * inventory.get(y).getQuantity();
+                total += sum;
+                System.out.println(String.format("%3s %2s %25s %2s %6s %4s %6s %4s %5s", (y+1), "|", inventory.get(y).getProduct().getName().replaceAll("\\s\\s", ""), "|", inventory.get(y).getPrice(), "|", inventory.get(y).getQuantity(), "|", sum));
             }
-            
+            System.out.println("Total($) : " + total);
         }catch(Exception e) {
             e.getMessage();
         }
@@ -586,10 +594,12 @@ public class TestSystem {
                 return;
             }
             
-            //Collection<Role> userRole = current_user.getRoleCollection();
             System.out.println("==================================");
-            System.out.println("current user : " + current_user.getUserName() +"-"+ current_user.getRoleCollection());
-            
+            System.out.println("current user : " + current_user.getUserName());
+            List<Role> userRole = (List<Role>) current_user.getRoleCollection();
+            for(Role r : userRole) {
+                System.out.println(r.getRoleName().replaceAll("\\s\\s", ""));
+            }
             System.out.println("----------------------------------");
 
             
@@ -614,8 +624,9 @@ public class TestSystem {
                             {
                                 case 1: // List store
                                     getAllStores();
+                                    System.out.println("----------------------------------");
                                     break;
-
+                                    
                                 case 2: // Add store
                                     System.out.print("Enter store name : ");
                                     store_name = sc.nextLine();
@@ -627,10 +638,10 @@ public class TestSystem {
                                     store_email = sc.nextLine();
                                     Store store_created = session.insertStore(store_name, store_address, store_phone, store_email);
                                     if(store_created != null) { 
-                                        System.out.print("Create Successful!");
+                                        System.out.println("Create Successful!");
                                     }else
                                     {
-                                        System.out.print("Create Faild!");
+                                        System.out.println("Create Faild!");
                                     }
                                     System.out.println("----------------------------------");
                                     break;
@@ -641,7 +652,7 @@ public class TestSystem {
                                     Store finded = session.findStoreById(store_id);
                                     if(finded == null)
                                     {
-                                        System.out.print("The store id is not exist.");
+                                        System.out.println("The store id is not exist.");
                                         break;
                                     }
                                     System.out.print("Enter store new name : ");
@@ -657,10 +668,10 @@ public class TestSystem {
                                     boolean res = session.updateStore(store_id, store_name, store_address, store_phone, store_email, store_status);
                                     if(res == true)
                                     {
-                                        System.out.print("Update Successful!");
+                                        System.out.println("Update Successful!");
                                     }else
                                     {
-                                        System.out.print("Update Faild!");
+                                        System.out.println("Update Faild!");
                                     }
                                     System.out.println("----------------------------------");
                                     break;
@@ -670,10 +681,10 @@ public class TestSystem {
                                     store_id = Long.parseLong(sc.nextLine());
                                     if(session.deleteStore(store_id))
                                     {
-                                        System.out.print("Delete Successful!");
+                                        System.out.println("Delete Successful!");
                                     }else
                                     {
-                                        System.out.print("Delete Faild!");
+                                        System.out.println("Delete Faild!");
                                     }
                                     System.out.println("----------------------------------");
                                     break;
@@ -696,8 +707,9 @@ public class TestSystem {
                             switch(userChoice) {
                                 case 1: //List User
                                     getAllUsers();
+                                    System.out.println("----------------------------------");
                                     break;
-                                    
+                                                                        
                                 case 2: //Add User
                                     System.out.print("Enter username : ");
                                     user_name = sc.nextLine();
@@ -717,7 +729,7 @@ public class TestSystem {
                                     user_role = sc.nextLine();
 
                                     User createdUser = session.insertUser(user_name, user_password, full_name, user_address, user_phone, store_id_new, user_email);
-                                    session.insertUserRole(createdUser.getId(), user_role);
+                                    session.insertUserRole(createdUser.getId(), user_role.toUpperCase());
                                     if(createdUser != null)
                                     {
                                         System.out.println("Create Successful!");
@@ -734,7 +746,7 @@ public class TestSystem {
                                     User user_finded = session.findUserById(user_id);
                                     if(user_finded == null)
                                     {
-                                        System.out.print("The ID is not exist.");
+                                        System.out.println("The ID is not exist.");
                                         break;
                                     }
                                     System.out.print("Enter new password : ");
@@ -777,12 +789,20 @@ public class TestSystem {
                                    
                                 case 5: // List Role
                                     getAllRoles();
+                                    System.out.println("----------------------------------");
                                     break;
                                     
                                 case 6: //Add Role
                                     System.out.print("Enter role: ");
                                     user_role = sc.nextLine();
-                                    session.insertRole(user_role);
+                                    boolean role_res = session.insertRole(user_role.toUpperCase());
+                                    if(role_res)
+                                    {
+                                        System.out.println("Add Successful!");
+                                    }else
+                                    {
+                                        System.out.println("Add Faild!");
+                                    }
                                     System.out.println("----------------------------------");
                                     break;
                                 case 7: //Remove Role
@@ -803,15 +823,21 @@ public class TestSystem {
                                     user_id = Long.parseLong(sc.nextLine());
                                     System.out.print("Enter role for user : ");
                                     user_role = sc.nextLine();
-                                    session.insertUserRole(user_id, user_role);
+                                    boolean user_res = session.insertUserRole(user_id, user_role.toUpperCase());
+                                    if(user_res)
+                                    {
+                                        System.out.println("Add Successful!");
+                                    }else
+                                    {
+                                        System.out.println("Add Faild!");
+                                    }
                                     System.out.println("----------------------------------");
                                     break;
                                  
                                 case 9: //List User of Role
                                     System.out.print("Enter role name : ");
                                     user_role = sc.nextLine();
-                                    getUsersByRole(user_role);
-                                    
+                                    getUsersByRole(user_role.toUpperCase());
                                     break;
                                     
                                 case 10: //list Role of User
@@ -826,7 +852,7 @@ public class TestSystem {
                                     System.out.print("Enter role for user : ");
                                     user_role = sc.nextLine();
                                     
-                                    if(session.deleteUserRole(user_id, user_role))
+                                    if(session.deleteUserRole(user_id, user_role.toUpperCase()))
                                     {
                                         System.out.println("Delete Successful!");
                                     }else
@@ -863,7 +889,7 @@ public class TestSystem {
                                 case 2: //Add product
                                     System.out.print("Enter phone name : ");
                                     product_name = sc.nextLine();
-                                    System.out.print("Enter supplier id :");
+                                    System.out.print("Enter supplier id : ");
                                     product_supplier = Long.parseLong(sc.nextLine());
                                     System.out.print("Enter after camera : ");
                                     product_camera1 = Integer.parseInt(sc.nextLine());
@@ -900,7 +926,7 @@ public class TestSystem {
                                     product_id = Long.parseLong(sc.nextLine());
                                     if(session.findProductById(product_id) == null)
                                     {
-                                        System.out.print("The ID is not exist.");
+                                        System.out.println("The ID is not exist.");
                                         break;
                                     }
                                     System.out.print("Enter new phone name : ");
@@ -998,7 +1024,7 @@ public class TestSystem {
                                     supplier_id = Long.parseLong(sc.nextLine());
                                     if(session.findSupplierById(supplier_id) == null)
                                     {
-                                        System.out.print("The ID is not exist.");
+                                        System.out.println("The ID is not exist.");
                                         break;
                                     }
                                     System.out.print("Enter supplier name : ");
@@ -1078,7 +1104,7 @@ public class TestSystem {
                                     customer_id = Long.parseLong(sc.nextLine());
                                     if(session.findCustomerById(customer_id) == null)
                                     {
-                                        System.out.print("The ID is not exist.");
+                                        System.out.println("The ID is not exist.");
                                         break;
                                     }
                                     System.out.print("Enter customer name : ");
@@ -1149,7 +1175,7 @@ public class TestSystem {
                                     order_store_id  = Long.parseLong(sc.nextLine());
                                     store_finded = session.findStoreById(order_store_id);
                                     if(store_finded == null) {
-                                        System.out.print("The store is not exist!");
+                                        System.out.println("The store is not exist!");
                                         break;
                                     }
                                     do {
@@ -1160,10 +1186,10 @@ public class TestSystem {
                                             order_product_id = Long.parseLong(sc.nextLine());
                                             Product p = session.findProductById(order_product_id);
                                             if(p == null) {
-                                                System.out.print("The product is not exist!");
+                                                System.out.println("The product is not exist!");
                                                 break;
                                             }
-                                            System.out.print("Enter quantity of "+p.getName()+": ");
+                                            System.out.print("Enter quantity of "+ p.getName().replaceAll("\\s\\s", "") +" : ");
                                             order_quantity = Integer.parseInt(sc.nextLine());
                                             OrderDetail order = new OrderDetail();
                                             order.setProduct(p);
@@ -1233,7 +1259,7 @@ public class TestSystem {
                                     order_store_id  = Long.parseLong(sc.nextLine());
                                     store_finded = session.findStoreById(order_store_id);
                                     if(store_finded == null) {
-                                        System.out.print("The store is not exist!");
+                                        System.out.println("The store is not exist!");
                                         break;
                                     }
                                     do {
@@ -1244,10 +1270,10 @@ public class TestSystem {
                                             order_product_id = Long.parseLong(sc.nextLine());
                                             Product p = session.findProductById(order_product_id);
                                             if(p == null) {
-                                                System.out.print("The product is not exist!");
+                                                System.out.println("The product is not exist!");
                                                 break;
                                             }
-                                            System.out.print("Enter quantity of "+p.getName()+": ");
+                                            System.out.print("Enter quantity of "+ p.getName().replaceAll("\\s\\s", "") +" : ");
                                             order_quantity = Integer.parseInt(sc.nextLine());
                                             OrderDetail order = new OrderDetail();
                                             order.setProduct(p);
@@ -1354,7 +1380,7 @@ public class TestSystem {
                                     w_store_id = Long.parseLong(sc.nextLine());
                                     w_store = session.findStoreById(w_store_id);
                                     if(w_store == null) {
-                                        System.out.print("The store is not exist!");
+                                        System.out.println("The store is not exist!");
                                         break;
                                     }
                                     do {
@@ -1365,16 +1391,16 @@ public class TestSystem {
                                             w_product_id = Long.parseLong(sc.nextLine());
                                             w_product = session.findProductById(w_product_id);
                                             if(w_product == null) {
-                                                System.out.print("The product is not exist!");
+                                                System.out.println("The product is not exist!");
                                                 break;
                                             }
                                             if(w_import) {
-                                                System.out.print("Enter price of "+w_product.getName()+": ");
+                                                System.out.print("Enter price of "+w_product.getName().replaceAll("\\s\\s", "")+" : ");
                                                 w_price = Integer.parseInt(sc.nextLine());
                                             } else {
                                                 w_price = w_product.getPrice();
                                             }
-                                            System.out.print("Enter quantity of "+w_product.getName()+": ");
+                                            System.out.print("Enter quantity of "+w_product.getName().replaceAll("\\s\\s", "")+" : ");
                                             w_quantity = Integer.parseInt(sc.nextLine());
                                             
                                             IoDetail ware = new IoDetail();
@@ -1433,7 +1459,7 @@ public class TestSystem {
                                     w_store_id = Long.parseLong(sc.nextLine());
                                     w_store = session.findStoreById(w_store_id);
                                     if(w_store == null) {
-                                        System.out.print("The store is not exist!");
+                                        System.out.println("The store is not exist!");
                                         break;
                                     }
                                     
@@ -1445,16 +1471,16 @@ public class TestSystem {
                                             w_product_id = Long.parseLong(sc.nextLine());
                                             w_product = session.findProductById(w_product_id);
                                             if(w_product == null) {
-                                                System.out.print("The product is not exist!");
+                                                System.out.println("The product is not exist!");
                                                 break;
                                             }
                                             if(w_import) {
-                                                System.out.print("Enter price of "+w_product.getName()+": ");
+                                                System.out.print("Enter price of "+w_product.getName().replaceAll("\\s\\s", "")+" : ");
                                                 w_price = Integer.parseInt(sc.nextLine());
                                             } else {
                                                 w_price = w_product.getPrice();
                                             }
-                                            System.out.print("Enter quantity of "+w_product.getName()+": ");
+                                            System.out.print("Enter quantity of "+w_product.getName().replaceAll("\\s\\s", "")+" : ");
                                             w_quantity = Integer.parseInt(sc.nextLine());
                                             
                                             IoDetail ware = new IoDetail();

@@ -152,9 +152,9 @@ public class IoWarehouse implements Serializable {
     @Override
     public String toString() {
         if(this.import1) {
-            return String.format("%3s %2s %17s %3s %12s %3s %10s %3s %5s %5s %8s", this.id, "|", this.storeId.getName().replaceAll("\\s\\s", ""), "|", this.staffId.getUserName().replaceAll("\\s\\s", ""), "|", this.createdAt, "|", this.total, "|", "Import");
+            return String.format("%3s %2s %30s %2s %12s %2s %10s %2s %5s %5s %8s", this.id, "|", this.storeId.getName().replaceAll("\\s\\s", ""), "|", this.staffId.getUserName().replaceAll("\\s\\s", ""), "|", this.createdAt, "|", this.total, "|", "Import");
         } else {
-            return String.format("%3s %2s %17s %3s %12s %3s %10s %3s %5s %5s %8s", this.id, "|", this.storeId.getName().replaceAll("\\s\\s", ""), "|", this.staffId.getUserName().replaceAll("\\s\\s", ""), "|", this.createdAt, "|", this.total, "|", "Export");
+            return String.format("%3s %2s %30s %2s %12s %2s %10s %2s %5s %5s %8s", this.id, "|", this.storeId.getName().replaceAll("\\s\\s", ""), "|", this.staffId.getUserName().replaceAll("\\s\\s", ""), "|", this.createdAt, "|", this.total, "|", "Export");
         }
     }
     

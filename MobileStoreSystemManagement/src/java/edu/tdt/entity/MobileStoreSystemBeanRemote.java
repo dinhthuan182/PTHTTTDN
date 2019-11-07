@@ -32,8 +32,8 @@ public interface MobileStoreSystemBeanRemote {
     User insertUser(String userName, String userPassword, String fullName, String address, String phone, Long storeId, String email); //Done!
     boolean updateUser(Long id, String userPassword, String fullName, String address, String phone, Long storeId, String email, Boolean status);
     boolean deleteUser(Long id);
-    void insertRole(String roleName);
-    void insertUserRole(Long user_id, String roleName);
+    boolean insertRole(String roleName);
+    boolean insertUserRole(Long user_id, String roleName);
     List<User> getAllUsers();//Done!
     User findUserById(Long id);
     List<Role> getAllRoles();
